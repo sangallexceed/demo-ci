@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>MVNOモジュール共通API</title>
+		<link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="../assets/vendor/metisMenu/metisMenu.min.css">
+		<link rel="stylesheet" href="../assets/vendor/datatables-plugins/dataTables.bootstrap.css">
+		<link rel="stylesheet" href="../assets/vendor/datatables-responsive/dataTables.responsive.css">
+		<link rel="stylesheet" href="../assets/vendor/sb-admin-2/css/sb-admin-2.css">
+		<link rel="stylesheet" href="../assets/vendor/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../assets/css/app.css">
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div id="wrapper">
+			<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="list.html">MVNOモジュール共通API</a>
+				</div>
+
+				<ul class="nav navbar-top-links navbar-right">
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-user">
+							<li><a href="../login.html"><i class="fa fa-sign-out fa-fw"></i> ログアウト</a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+
+			<div id="page-wrapper">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-lg-12">
+							<h1 class="page-header">事業者：一覧</h1>
+						</div>
+					</div>
+
+					<div class="form-horizontal well">
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label class="control-label col-md-3">キーワード</label>
+									<div class="col-md-9">
+										<input type="text" class="form-control" placeholder="事業者名など、空白区切りで複数キーワード">
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label class="control-label col-md-3">契約SP</label>
+									<div class="col-md-9">
+										<div class="btn-group">
+											<button type="button" class="btn btn-primary"><i class="fa fa-check-circle-o fa-fw"></i> IIJ</button>
+											<button type="button" class="btn btn-primary btn-outline"><i class="fa fa-circle-o fa-fw"></i> UQ</button>
+											<button type="button" class="btn btn-primary btn-outline"><i class="fa fa-circle-o fa-fw"></i> 楽天</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12 text-center">
+								<button type="reset" class="btn btn-default"><i class="fa fa-eraser fa-fw"></i>クリア</button>
+								<button type="submit" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>絞り込む</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="dataTables_info" role="status" aria-live="polite">57件中 1から10 を表示</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="dataTables_paginate paging_simple_numbers">
+								<ul class="pagination">
+									<li class="paginate_button previous disabled" tabindex="0"><a href="#">前へ</a></li>
+									<li class="paginate_button active" tabindex="0"><a href="#">1</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">2</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">3</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">4</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">5</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">6</a></li>
+									<li class="paginate_button next" tabindex="0"><a href="#">次へ</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th class="col-md-1">
+												No
+												<a href="#"><i class="fa fa-arrow-up"></i></a>
+												<a href="#"><i class="fa fa-arrow-down"></i></a>
+											</th>
+											<th class="col-md-3">
+												事業者名
+												<a href="#"><i class="fa fa-arrow-up"></i></a>
+												<a href="#"><i class="fa fa-arrow-down"></i></a>
+											</th>
+											<th class="col-md-1">
+												IIJ
+												<a href="#"><i class="fa fa-arrow-up"></i></a>
+												<a href="#"><i class="fa fa-arrow-down"></i></a>
+											</th>
+											<th class="col-md-1">
+												UQ
+												<a href="#"><i class="fa fa-arrow-up"></i></a>
+												<a href="#"><i class="fa fa-arrow-down"></i></a>
+											</th>
+											<th class="col-md-1">
+												楽天
+												<a href="#"><i class="fa fa-arrow-up"></i></a>
+												<a href="#"><i class="fa fa-arrow-down"></i></a>
+											</th>
+											<th class="col-md-2">
+												利用開始日
+												<a href="#"><i class="fa fa-arrow-up"></i></a>
+												<a href="#"><i class="fa fa-arrow-down"></i></a>
+											</th>
+											<th class="col-md-2">
+												利用終了日
+												<a href="#"><i class="fa fa-arrow-up"></i></a>
+												<a href="#"><i class="fa fa-arrow-down"></i></a>
+											</th>
+											<th class="col-md-1"><a href="create.html" class="btn btn-success btn-block btn-sm"><i class="fa fa-plus fa-fw"></i> 新規登録</a></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>AAAA CATV</td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td>2017-04-01</td>
+											<td>2018-04-01</td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td>BBBB CATV</td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td></td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td>2017-06-01</td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>3</td>
+											<td>CCCC CATV</td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td></td>
+											<td>2017-04-01</td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>4</td>
+											<td>DDDD CATV</td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button></td>
+											<td></td>
+											<td>2017-04-01</td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>5</td>
+											<td>XXXX CATV</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>6</td>
+											<td>XXXX CATV</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>7</td>
+											<td>XXXX CATV</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>8</td>
+											<td>XXXX CATV</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>9</td>
+											<td>XXXX CATV</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+										<tr>
+											<td>10</td>
+											<td>XXXX CATV</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<th><a href="update.html" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="dataTables_info" role="status" aria-live="polite">57件中 1から10 を表示</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="dataTables_paginate paging_simple_numbers">
+								<ul class="pagination">
+									<li class="paginate_button previous disabled" tabindex="0"><a href="#">前へ</a></li>
+									<li class="paginate_button active" tabindex="0"><a href="#">1</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">2</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">3</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">4</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">5</a></li>
+									<li class="paginate_button" tabindex="0"><a href="#">6</a></li>
+									<li class="paginate_button next" tabindex="0"><a href="#">次へ</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-lg-6 col-lg-offset-6">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									設定反映
+								</div>
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-sm-12 text-right">
+											2017年04月04日 12:34:56 反映済み
+											<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#syncModal">
+												<i class="fa fa-refresh fa-fw"></i> 設定反映
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="syncModal" tabindex="-1" role="dialog" aria-labelledby="syncModalLabel">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+											<h4 class="modal-title" id="syncModalLabel">設定反映</h4>
+										</div>
+										<div class="modal-body">
+											事業者情報を下記サーバーに反映します。よろしいですか？<br>
+											・AAAサーバー<br>
+											・BBBサーバー<br>
+											・同期設定ファイルよりサーバー名を一覧で表示<br>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+											<button type="button" class="btn btn-warning"><i class="fa fa-refresh fa-fw"></i> 設定を反映する</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<footer>
+						<p class="pull-right"><a href="#">Back to top</a></p>
+						<p>© 2017 Company, Inc.</p>
+					</footer>
+				</div>
+			</div>
+		</div>
+		<script src="../assets/vendor/jquery/jquery.min.js"></script>
+		<script src="../assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../assets/vendor/metisMenu/metisMenu.min.js"></script>
+		<script src="../assets/vendor/sb-admin-2/js/sb-admin-2.js"></script>
+		<script src="../assets/js/app.js"></script>
+	</body>
+</html>

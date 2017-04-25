@@ -1,0 +1,31 @@
+storage:
+    image: busybox
+    volumes:
+        - /var/lib/mysql
+    container_name: storage
+
+db:
+    build: ./docker/db/
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=docker
+        - MYSQL_USER=docker
+        - MYSQL_PASSWORD=docker
+    volumes_from:
+        - storage
+    volumes:
+        - ./docker/db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+        - "3306:3306"
+    container_name: mvno-db
+
+app:
+    build: ./docker/app/
+    volumes:
+        - ./srv:/srv
+    links:
+        - db
+    ports:
+        - "80:80"
+        - "443:443"
+    container_name: mvno-app
