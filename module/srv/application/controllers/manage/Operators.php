@@ -19,7 +19,7 @@ class Operators extends My_Controller
 	private $service_providers = array();
 	private $arr_agreement = array();
 
-	public function index()
+	public function index1()
 	{
 		$per_page = $this->ajax_pagination_operators->per_page;
 		$config = $this->config_ajax_paging('#operators_list', $this->operators_model, 'operators/ajax_pagination_operators_data', $per_page, null);
