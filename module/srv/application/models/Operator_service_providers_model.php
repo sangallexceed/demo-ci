@@ -62,19 +62,4 @@ class Operator_service_providers_model extends CI_Model
 		$this->db->update($this->table_name, $data);
 	}
 
-	/**
-	 * get data
-	 *
-	 * @param
-	 *
-	 */
-	public function get_data($operator_id)
-	{
-		$this->db->select('*');
-		$this->db->from($this->table_name);
-		$this->db->where('operator_id', $operator_id);
-		// 事業者.削除日時　IS NULL
-		$bulletins = $this->db->get()->result_array();
-		return $bulletins;
-	}
 }

@@ -1,6 +1,6 @@
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="dataTables_info" role="status" aria-live="polite">57件中 1から10 を表示</div>
+							<div class="dataTables_info" role="status" aria-live="polite"></div>
 						</div>
 						<div class="col-sm-6">
 							<div class="dataTables_paginate paging_simple_numbers">
@@ -18,30 +18,30 @@
 										<tr>
 											<th class="col-md-1">
 												No
-												<a href="#"><i class="fa fa-arrow-up"></i></a>
-												<a href="#"><i class="fa fa-arrow-down"></i></a>
+												<a href="#" onclick="return arrangementData('operator_id','ASC','no_service_provider');"><i class="fa fa-arrow-up"></i></a>
+												<a href="#" onclick="return arrangementData('operator_id','DESC','no_service_provider');"><i class="fa fa-arrow-down"></i></a>
 											</th>
 											<th class="col-md-3">
 												事業者名
-												<a href="#"><i class="fa fa-arrow-up"></i></a>
-												<a href="#"><i class="fa fa-arrow-down"></i></a>
+												<a href="#" onclick="return arrangementData('operator_name','ASC','no_service_provider');"><i class="fa fa-arrow-up"></i></a>
+												<a href="#" onclick="return arrangementData('operator_name','DESC','no_service_provider');"><i class="fa fa-arrow-down"></i></a>
 											</th>
-											<?php foreach($agreements as $agreement) : ?>
+											<?php foreach($arr_service_providers as $service_providers_item) : ?>
 											<th class="col-md-1">
-												<?php echo $agreement['name']; ?>
-												<a href="#"><i class="fa fa-arrow-up"></i></a>
-												<a href="#"><i class="fa fa-arrow-down"></i></a>
+												<?php echo $service_providers_item['name']; ?>
+												<a href="#" onclick="return arrangementData('service_provider','ASC', <?php echo $service_providers_item['id']; ?>);"><i class="fa fa-arrow-up"></i></a>
+												<a href="#" onclick="return arrangementData('service_provider','DESC', <?php echo $service_providers_item['id']; ?>);"><i class="fa fa-arrow-down"></i></a>
 											</th>
 											<?php endforeach;?>
 											<th class="col-md-2">
 												利用開始日
-												<a href="#"><i class="fa fa-arrow-up"></i></a>
-												<a href="#"><i class="fa fa-arrow-down"></i></a>
+												<a href="#" onclick="return arrangementData('start_date','ASC','no_service_provider');"><i class="fa fa-arrow-up"></i></a>
+												<a href="#" onclick="return arrangementData('start_date','DESC','no_service_provider');"><i class="fa fa-arrow-down"></i></a>
 											</th>
 											<th class="col-md-2">
 												利用終了日
-												<a href="#"><i class="fa fa-arrow-up"></i></a>
-												<a href="#"><i class="fa fa-arrow-down"></i></a>
+												<a href="#" onclick="return arrangementData('end_date','ASC','no_service_provider');"><i class="fa fa-arrow-up"></i></a>
+												<a href="#" onclick="return arrangementData('end_date','DESC','no_service_provider');"><i class="fa fa-arrow-down"></i></a>
 											</th>
 											<th class="col-md-1"><a href="<?php echo site_url('operators/create') ?>" class="btn btn-success btn-block btn-sm"><i class="fa fa-plus fa-fw"></i> 新規登録</a></th>
 										</tr>
@@ -52,9 +52,9 @@
 										<tr>
 											<td><?= $data['operator_id'] ?></td>
 											<td><?= $data['operator_name']?></td>
-											<?php foreach($agreements as $agreement) : ?>
+											<?php foreach($arr_service_providers as $service_providers_item) : ?>
 											<td>
-												<?php if($data['service_provider_'.$agreement['id']] === '1')
+												<?php if($data['service_provider_'.$service_providers_item['id']] === '1')
 												{ echo '<button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i></button>';}else {
 												'';}?>
 											</td>
@@ -72,7 +72,7 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="dataTables_info" role="status" aria-live="polite">57件中 1から10 を表示</div>
+							<div class="dataTables_info" role="status" aria-live="polite"></div>
 						</div>
 						<div class="col-sm-6">
 							<div class="dataTables_paginate paging_simple_numbers">

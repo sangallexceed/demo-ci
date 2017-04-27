@@ -79,13 +79,14 @@ class Operators_model extends CI_Model
 	 * @param unknown $condition
 	 *
 	 */
-	private function search_operators_condition($condition, $db)
+	private function get_data_operators_condition($condition, $db)
 	{
 		if (!is_null($condition))
 		{
 			// 投稿日時
 			$search_name = $condition['search_name'];
 			$service_provider = $condition['service_provider'];
+			$collumn = $condition['search_name'];
 			if (isset($service_provider) && !empty($service_provider))
 			{
 				$db->join($this->operator_service_providers_model->get_table_name() . ' AS SP', 'SP.operator_id = OP.operator_id', 'INNER');
@@ -104,23 +105,14 @@ class Operators_model extends CI_Model
 				}
 				$db->group_end();
 			}
+			if(array_key_exists("column", $condition) && array_key_exists("sort_type", $condition))
+			{
+				if(isset($condition['column']) && !empty($condition['column']))
+				{
+					$this->db->order_by("OP.".$condition['column'], $condition['sort_type']);
+				}
+			}
 		}
-	}
-
-	/**
-	 *
-	 * @param
-	 *
-	 */
-	public function record_count($condition)
-	{
-		$this->db->select('*');
-		$this->db->from($this->table_name . ' OP');
-		if (!is_null($condition))
-		{
-			$this->search_operators_condition($condition, $this->db);
-		}
-		return $this->db->count_all_results();
 	}
 
 	/**
@@ -210,13 +202,78 @@ class Operators_model extends CI_Model
 	 */
 	function get_rows($params = [])
 	{
-		$this->db->select('*');
-		$this->db->from($this->table_name . ' OP');
+		$today = date("Y-m-d");
+		$arr_service_providers = array();
+		$deleted_at_null = '';
+		$arr_service_providers = $params['arr_service_providers'];
+		$this->db->select('OP.operator_id, OP.operator_name, OP.start_date, OP.end_date');
+		foreach ($params['arr_service_providers'] as $service_provider)
+		{
+			$this->db->select(',CASE WHEN SP'.$service_provider['id'] .'.service_provider = '.$service_provider['id'] .' THEN  1 ELSE  0 END as service_provider_'.$service_provider['id'] .'', false);
+		}
+ 		$this->db->from($this->table_name . ' OP');
+		foreach ($params['arr_service_providers'] as $service_provider)
+		{
+			$this->db->join($this->operator_service_providers_model->get_table_name() . ' AS SP'.$service_provider['id'] .'', 'OP.operator_id = SP'.$service_provider['id'] .'.operator_id
+					AND SP'.$service_provider['id'] .'.deleted_at IS NULL
+					AND SP'.$service_provider['id'] .'.service_provider = '.$service_provider['id'].'
+					AND SP'.$service_provider['id'] .'.contract_status = 1', 'LEFT');
+		}
+		$this->db->group_start();
+		$this->db->where('OP.start_date <= "'.$today.'"');
+		$this->db->or_where('OP.start_date IS NULL');
+		$this->db->group_end();
+		$this->db->group_start();
+		$this->db->where('OP.end_date >= "'.$today.'"');
+		$this->db->or_where('OP.end_date IS NULL');
+		$this->db->group_end();
+
 		if(array_key_exists("param_search", $params))
 		{
 			$param_search = $params['param_search'];
-			$this->search_operators_condition($param_search, $this->db);
+			$search_name = $param_search['search_name'];
+			$service_provider = $param_search['service_provider'];
+			if (isset($service_provider) && !empty($service_provider))
+			{
+				$this->db->where('SP'.$service_provider.'.service_provider IS NOT NULL');
+			}
+			if (isset($search_name) && !empty($search_name))
+			{
+				$operator_names = explode(' ', $search_name);
+				$this->db->group_start();
+				foreach ($operator_names as $operator_name)
+				{
+					$operator_name = trim($operator_name);
+					//$this->db->like();
+					$this->db->or_like('OP.operator_name', $operator_name);
+				}
+				$this->db->group_end();
+			}
+			if(array_key_exists("column", $param_search) && array_key_exists("sort_type", $param_search))
+			{
+				$collumn = $param_search['column'];
+				if(array_key_exists("sort_service_provider", $param_search))
+				{
+					$sort_service_provider = $param_search['sort_service_provider'];
+					if($sort_service_provider != 'no_service_provider')
+					{
+						if(isset($collumn) && !empty($collumn))
+						{
+							$this->db->order_by('SP'.$sort_service_provider.'.'.$collumn, $param_search['sort_type']);
+						}
+					}
+					else
+					{
+						if(isset($collumn) && !empty($collumn))
+						{
+							$this->db->order_by("OP.".$collumn, $param_search['sort_type']);
+							log_message('debug', '================-===debug====================');
+						}
+					}
+				}
+			}
 		}
+		$this->db->where('OP.deleted_at', NULL);
 		if (array_key_exists("start", $params) && array_key_exists("limit", $params))
 		{
 			$this->db->limit($params['limit'], $params['start']);
@@ -226,6 +283,8 @@ class Operators_model extends CI_Model
 			$this->db->limit($params['limit']);
 		}
 		$query = $this->db->get();
+		log_message('debug', '================SQL1: ' . $this->db->last_query());
 		return $query->result_array();
 	}
+
 }

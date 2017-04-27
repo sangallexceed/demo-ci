@@ -1,4 +1,7 @@
-
+<?php
+use PhpParser\Node\Stmt\Echo_;
+?>
+		<div id="wrapper">
 			<div id="page-wrapper">
 				<div class="container-fluid">
 					<div class="row">
@@ -18,8 +21,8 @@
 						<?php $this->session->unmark_flash('error_message_create'); ?>
 					<?php endif; ?>
 					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operators/create') ?>">
-						<?php if ($this->session->has_userdata('arr_ip_address_crt')): ?>
-						<input type="hidden" name="count_ip_address_crt" value="<?= count($this->session->flashdata('arr_ip_address_crt')); ?>" />
+						<?php if (isset($arr_ip_address_crt)): ?>
+						<input type="hidden" name="count_ip_address_crt" value="<?= count($arr_ip_address_crt); ?>" />
 						<?php else: ?>
 						<input type="hidden" name="count_ip_address_crt" value="" />
 						<?php endif;?>
@@ -28,7 +31,11 @@
 								<div class="row">
 									<div class="col-lg-6">
 										<legend>事業者情報</legend>
+										<?php if($this->session->has_userdata('error_business_name_crt') && set_value('business_name') === '') : ?>
+										<div class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3"><span class="text-danger">※</span>事業者名</label>
 											<div class="col-md-9">
 												<input type="text" class="form-control" name="business_name"  placeholder=""  value="<?= set_value('business_name',''); ?>" >
@@ -55,8 +62,8 @@
 												<button type="button" class="btn btn-primary" name="add_ip_address" onclick="addIPAddress();"><i class="fa fa-plus fa-fw"></i> 追加</button>
 											</div>
 										</div>
-										<?php if ($this->session->has_userdata('arr_ip_address_crt')): ?>
-										<?php foreach($this->session->flashdata('arr_ip_address_crt') as $ip_address) : ?>
+										<?php if (isset($arr_ip_address_crt)): ?>
+										<?php foreach($arr_ip_address_crt as $ip_address) : ?>
 										<div class="form-group" id="group_add_ip_<?= $count_ip_address_crt ++ ?>">
 											<label class="control-label col-md-3">No.<?= $count_ip_address_crt - 1 ?></label>
 											<div class="col-md-4">
@@ -78,7 +85,7 @@
 						<div class="panel panel-default">
 							<div class="panel-body form-horizontal">
 								<div class="row">
-									<?php foreach($agreements as $data) : ?>
+									<?php foreach($arr_service_providers as $data) : ?>
 									<div class="col-lg-6">
 										<legend><?= $data['name'] ?></legend>
 										<div class="form-group">
@@ -91,7 +98,11 @@
 												<input type="hidden"  name="chk_input_agreement_<?= $data['id'] ?>" value="<?php echo set_value('chk_input_agreement_'.$data['id'],''); ?>" />
 											</div>
 										</div>
+										<?php if($this->session->has_userdata('error_service_provider_'. $data["id"]) && set_value('indentify_code_'.$data['id']) === '') : ?>
+										<div id="form_group_indentify_code_<?= $data['id'] ?>" class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3">識別コード</label>
 											<div class="col-md-6">
 												<input type="text" class="form-control" name="indentify_code_<?= $data['id'] ?>"  placeholder="" id="indentify_code" <?= set_value('chk_input_agreement_'.$data['id']) == 0 ? 'disabled' : '' ?> value="<?php echo set_value('indentify_code_'.$data['id'],''); ?>">
@@ -177,7 +188,7 @@
 					$("#agreement_"+id+'_i').removeClass("fa-check-circle-o");
 					$("#agreement_"+id+'_i').addClass("fa-circle-o");
 					$("#agreement_"+id).addClass("btn-outline");
-
+					$("#form_group_indentify_code_"+id).removeClass("has-error");
 				}
 				else
 				{

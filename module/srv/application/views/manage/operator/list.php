@@ -1,3 +1,4 @@
+		<div id="wrapper">
 			<div id="page-wrapper">
 				<div class="container-fluid">
 					<div class="row">
@@ -9,13 +10,18 @@
 					<div class="form-horizontal well">
 						<div class="row">
 							<?php
-					        	$attr = array("class" => "form-horizontal", "role" => "form", "id" => "search_operator_form", "name" => "search_operator_form");
-					        	echo form_open("operators/search", $attr);?>
+					        $attr = array("class" => "form-horizontal", "role" => "form", "id" => "search_operator_form", "name" => "search_operator_form");
+					        echo form_open("operators/search", $attr);?>
+					        <input type="hidden" name="search_name_hidden" value="<?= set_value('search_name', '')?>" />
+					        <input type="hidden" name="service_provider_hidden" value="<?php echo set_value('service_provider', ''); ?>" />
+					        <input type="hidden" name="column_name_hidden" value="" />
+					        <input type="hidden" name="sort_type_hidden" value="" />
+					        <input type="hidden" name="sort_service_provider_hidden" value="" />
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label class="control-label col-md-3">キーワード</label>
 									<div class="col-md-9">
-										<input type="text" class="form-control" placeholder="事業者名など、空白区切りで複数キーワード" id="search_name" name="search_name" value="<?= set_value('search_name')?>">
+										<input type="text" class="form-control" placeholder="事業者名など、空白区切りで複数キーワード" id="search_name" name="search_name" value="<?php echo set_value('search_name', ''); ?>">
 									</div>
 								</div>
 							</div>
@@ -25,7 +31,7 @@
 									<label class="control-label col-md-3">契約SP</label>
 									<div class="col-md-9">
 										<div class="btn-group">
-											<?php foreach($agreements as $data) : ?>
+											<?php foreach($arr_service_providers as $data) : ?>
 											<button type="button" id="service_provider_<?= $data['id'];?>" name="<?= $data['name'];?>" value="<?= $data['id'];?>" onclick="selectOperator(this.value);" class="btn btn-primary <?= set_value('service_provider') == $data["id"] ? '' : 'btn-outline' ?> "><i id="service_provider_i_<?= $data['id'];?>" class="fa <?= set_value('service_provider') == $data["id"] ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw"></i> <?php echo html_escape($data['name']);?></button>
 											<?php endforeach;?>
 											<input type="hidden" name="service_provider" value="<?php echo set_value('service_provider', ''); ?>" />
@@ -109,9 +115,7 @@
 				});
 			};
 			function clearFrom() {
-				$("#search_operator_form").trigger("reset");
-				$("input[name=search_name]").val('');
-				document.getElementById("search_name").value = "";
+				$('#search_name').removeAttr('value');
 				$("input[name=service_provider]:hidden").val('');
 				var service_providers = <?php echo json_encode($condition_service_providers); ?>;
 				service_providers.forEach(function(service_provider) {
@@ -120,4 +124,26 @@
 			    	$("#service_provider_i_"+service_provider).addClass("fa-circle-o");
 				});
 			};
+
+			function arrangementData (column, sort, sort_service_provider) {
+				$('input[name=column_name_hidden]').val(column);
+				$('input[name=sort_type_hidden]').val(sort);
+				$('input[name=sort_service_provider_hidden]').val(sort_service_provider);
+				var search_name = $('input[name=search_name_hidden]').val();
+		        var service_provider = $('input[name=service_provider_hidden]').val();
+				$.ajax({
+					method: "POST",
+					url: "<?php echo base_url(); ?>operators/arrangementData",
+					data: {
+						column: column,
+						sort: sort,
+						sort_service_provider: sort_service_provider,
+						search_name: search_name,
+						service_provider: service_provider
+					},
+					success: function(data) {
+						$("#operators_list").html(data);
+					}
+				});
+			}
 		</script>

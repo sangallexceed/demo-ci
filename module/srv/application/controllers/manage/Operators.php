@@ -17,19 +17,18 @@ class Operators extends My_Controller
 	private $message_error = "";
 	private $arr_ip_address_id_delete = array();
 	private $service_providers = array();
-	private $arr_agreement = array();
+	private $arr_service_providers = array();
 
 	public function index()
 	{
 		$per_page = $this->ajax_pagination_operators->per_page;
 		$config = $this->config_ajax_paging('#operators_list', $this->operators_model, 'operators/ajax_pagination_operators_data', $per_page, null);
 		$this->ajax_pagination_operators->initialize($config);
-
-		$operators = $this->operators_model->get_rows([
-				'limit' => $per_page
+		$arr_service_providers = $this->get_service_providers();
+		$this->data['operators'] = $this->operators_model->get_rows([
+				'limit' => $per_page,
+				'arr_service_providers' => $arr_service_providers
 		]);
-		$this->data['operators'] = $this->set_list_operators($operators);
-
 		// load the view
 		$this->render_list();
 	}
@@ -37,26 +36,27 @@ class Operators extends My_Controller
 	/**
 	 * ページネーション処理に必要な情報を初期化する
 	 *
-	 * @param
-	 *        	$target
-	 * @param
-	 *        	$model_name
-	 * @param
-	 *        	$url
-	 * @param
-	 *        	$per_page
+	 * @param $target
+	 * @param $model_name
+	 * @param $url
+	 * @param $per_page
 	 */
 	private function config_ajax_paging($target, $model_name, $url, $per_page, $input)
 	{
 		// total rows count
+		$arr_service_providers = $this->get_service_providers();
 		if($input)
 		{
-			$params = ['param_search' => $input];
+			$params = [
+					'param_search' => $input,
+					'arr_service_providers' => $arr_service_providers
+			];
 			$totalRec = count($model_name->get_rows($params));
 		}
 		else
 		{
-			$totalRec = count($model_name->get_rows());
+			$params = ['arr_service_providers' => $arr_service_providers];
+			$totalRec = count($model_name->get_rows($params));
 		}
 		//$totalRec = count($model_name->get_rows());
 		// pagination configuration
@@ -74,12 +74,18 @@ class Operators extends My_Controller
 	public function ajax_pagination_operators_data()
 	{
 		$page = $this->input->post('page');
+		$column = $this->input->post('column');
+		$sort_type = $this->input->post('sort');
 		$search_name = $this->input->post('search_name');
 		$service_provider = $this->input->post('service_provider');
+		$arr_service_providers = $this->get_service_providers();
 		$param_search = [
+				'column' => $column,
+				'sort_type' => $sort_type,
 				'search_name' => $search_name,
-				'service_provider' => $service_provider
+				'service_provider' => $service_provider,
 		];
+
 		if (!$page)
 		{
 			$offset = 0;
@@ -98,28 +104,29 @@ class Operators extends My_Controller
 			$param = [
 					'start' => $offset,
 					'limit' => $per_page,
-					'param_search' => $param_search
+					'param_search' => $param_search,
+					'arr_service_providers' => $arr_service_providers
 			];
 		}
 		else
 		{
 			$param = [
 			'start' => $offset,
-			'limit' => $per_page
+			'limit' => $per_page,
+			'arr_service_providers' => $arr_service_providers
 			];
 		}
 		$this->ajax_pagination_operators->initialize($config);
-		$operators = $this->operators_model->get_rows($param);
-		$this->data['operators'] = $this->set_list_operators($operators);
+		$this->data['operators'] = $this->operators_model->get_rows($param);
 
 		// load the view
-		$agreements = $this->get_agreement();
+		$arr_service_providers = $this->get_service_providers();
 		$this->data['condition_service_providers'] = array();
-		foreach ($agreements as $agreement)
+		foreach ($arr_service_providers as $service_provider_item)
 		{
-			array_push($this->data['condition_service_providers'], $agreement["id"]);
+			array_push($this->data['condition_service_providers'], $service_provider_item["id"]);
 		}
-		$this->data['agreements'] = $agreements;
+		$this->data['arr_service_providers'] = $arr_service_providers;
 
 		$this->load->view('manage/operator/operators_ajax_pagination_data', $this->data);
 	}
@@ -129,13 +136,13 @@ class Operators extends My_Controller
 	 */
 	public function render_list()
 	{
-		$agreements = $this->get_agreement();
+		$arr_service_providers = $this->get_service_providers();
 		$this->data['condition_service_providers'] = array();
-		foreach ($agreements as $agreement)
+		foreach ($arr_service_providers as $service_provider_item)
 		{
-			array_push($this->data['condition_service_providers'], $agreement["id"]);
+			array_push($this->data['condition_service_providers'], $service_provider_item["id"]);
 		}
-		$this->data['agreements'] = $agreements;
+		$this->data['arr_service_providers'] = $arr_service_providers;
 
 		$this->load->view('manage/header');
 		$this->load->view('manage/menu');
@@ -151,61 +158,43 @@ class Operators extends My_Controller
 		$per_page = $this->ajax_pagination_operators->per_page;
 		$config = $this->config_ajax_paging('#operators_list', $this->operators_model, 'operators/ajax_pagination_operators_data', $per_page, $this->input->post());
 		$this->ajax_pagination_operators->initialize($config);
-		$param = null;
+		$arr_service_providers = $this->get_service_providers();
+		$params = null;
+		$column = $this->input->post('column');
+		$sort_type = $this->input->post('sort');
 		$search_name = $this->input->post('search_name');
 		$service_provider = $this->input->post('service_provider');
+
 		$search_param = [
+				'column' => $column,
+				'sort_type' => $sort_type,
 				'search_name' => $search_name,
-				'service_provider' => $service_provider
+				'service_provider' => $service_provider,
+				'arr_service_providers' => $arr_service_providers
 		];
 		if ($this->input->post())
 		{
-			$param = [
+			$params = [
 					'limit' => $per_page,
-					'param_search' => $search_param
+					'param_search' => $search_param,
+					'arr_service_providers' => $arr_service_providers
 			];
 		}
 		else
 		{
-			$param = [
-					'limit' => $per_page
+			$params = [
+					'limit' => $per_page,
+					'arr_service_providers' => $arr_service_providers
 			];
 		}
-
-		$operators = $this->operators_model->get_rows($param);
-		$this->data['operators'] = $this->set_list_operators($operators);
+		$this->data['operators'] = $this->operators_model->get_rows($params);
 		$this->render_list();
-	}
-
-	/**
-	 * リストを保存
-	 */
-	private function set_list_operators($operators)
-	{
-		$arr_operators = array();
-		foreach ($operators as $operator)
-		{
-			$arr_service_providers = $this->operator_service_providers_model->get_data($operator['operator_id']);
-			foreach ($arr_service_providers as $service_provider)
-			{
-				if ($service_provider['contract_status'] === self::$CONTRACT_STATUS_ONE)
-				{
-					$operator['service_provider_' . $service_provider['service_provider']] = self::$CONTRACT_STATUS_ONE;
-				}
-				else
-				{
-					$operator['service_provider_' . $service_provider['service_provider']] = self::$CONTRACT_STATUS_ZERO;
-				}
-			}
-			array_push($arr_operators, $operator);
-		}
-		return $arr_operators;
 	}
 
 	/**
 	 * 　データサービスプロバイダを取得する
 	 */
-	private function get_agreement()
+	private function get_service_providers()
 	{
 		$attr = config_item('service_provider');
 		return $attr;
@@ -217,7 +206,7 @@ class Operators extends My_Controller
 	public function create()
 	{
 		$this->data['count_ip_address_crt'] = 1;
-		$this->data['agreements'] = $this->get_agreement();
+		$this->data['arr_service_providers'] = $this->get_service_providers();
 		if ($this->input->post())
 		{
 			if ($this->check_validate_create())
@@ -278,7 +267,7 @@ class Operators extends My_Controller
 					}
 				}
 				//
-				foreach ($this->arr_agreement as $data)
+				foreach ($this->arr_service_providers as $data)
 				{
 					$input_agreement = $this->input->post('chk_input_agreement_' . $data["id"]);
 					$indentify_code = $this->input->post('indentify_code_' . $data["id"]);
@@ -303,9 +292,11 @@ class Operators extends My_Controller
 	 */
 	private function check_validate_create()
 	{
-		$this->load->helper('form');
-		$this->load->helper('url');
 		$this->form_validation->set_rules('business_name', '事業者名', 'trim|required');
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error_business_name_crt', validation_errors());
+		}
 		$this->form_validation->set_rules('start_date', '利用開始日', 'callback_date_check');
 		$this->form_validation->set_rules('end_date', '利用終了日', 'callback_date_check');
 
@@ -320,6 +311,7 @@ class Operators extends My_Controller
 
 		if ($this->form_validation->run() === FALSE)
 		{
+			log_message('debug', "=========================error:" . validation_errors());
 			$this->session->set_flashdata('error_message_create', validation_errors());
 			return false;
 		}
@@ -373,7 +365,8 @@ class Operators extends My_Controller
 				}
 			}
 		}
-		$this->session->set_flashdata('arr_ip_address_crt', $arr_ip_address_crt);
+		//$this->session->set_flashdata('arr_ip_address_crt', $arr_ip_address_crt);
+		$this->data['arr_ip_address_crt'] = $arr_ip_address_crt;
 	}
 
 	/**
@@ -381,14 +374,19 @@ class Operators extends My_Controller
 	 */
 	private function check_validate_service_provider_crt()
 	{
-		$this->arr_agreement = $this->get_agreement();
-		foreach ($this->arr_agreement as $agreement)
+		$this->arr_service_providers = $this->get_service_providers();
+		$this->session->sess_destroy();
+		foreach ($this->arr_service_providers as $service_provider)
 		{
-			$input_agreement_check = $this->input->post('chk_input_agreement_' . $agreement["id"]);
-			$indentify_code_check = $this->input->post('indentify_code_' . $agreement["id"]);
+			$input_agreement_check = $this->input->post('chk_input_agreement_' . $service_provider["id"]);
+			$indentify_code_check = $this->input->post('indentify_code_' . $service_provider["id"]);
 			if ($input_agreement_check === self::$CONTRACT_STATUS_ONE)
 			{
-				$this->form_validation->set_rules('indentify_code_' . $agreement["id"], $agreement["name"], 'required|max_length[255]');
+				$this->form_validation->set_rules('indentify_code_' . $service_provider["id"], $service_provider["name"], 'required|max_length[255]');
+				if ($this->form_validation->run() === FALSE)
+				{
+					$this->session->set_flashdata('error_service_provider_'. $service_provider["id"],validation_errors());
+				}
 			}
 		}
 	}
@@ -398,16 +396,14 @@ class Operators extends My_Controller
 	 */
 	public function update()
 	{
-		log_message('debug', "------------function update------------");
 		$id = $this->uri->segment(4);
-		log_message('debug', "--------------------------id : " . $id);
-		$this->data['agreements'] = $this->get_agreement();
+		$this->data['arr_service_providers'] = $this->get_service_providers();
 		$this->set_data_update($id);
 		if ($this->input->post())
 		{
-			$this->session->set_flashdata('business_name', $this->input->post('business_name'));
-			$this->session->set_flashdata('start_date', $this->input->post('start_date'));
-			$this->session->set_flashdata('end_date', $this->input->post('end_date'));
+			$this->data['business_name'] = $this->input->post('business_name');
+			$this->data['start_date'] = $this->input->post('start_date');
+			$this->data['end_date'] = $this->input->post('end_date');
 			if ($this->check_validate_update($id))
 			{
 				$this->update_operator();
@@ -502,6 +498,10 @@ class Operators extends My_Controller
 	private function check_validate_update($operator_id)
 	{
 		$this->form_validation->set_rules('business_name', '事業者名', 'required');
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error_business_name_upd', validation_errors());
+		}
 		$this->form_validation->set_rules('start_date', '利用開始日', 'callback_date_check');
 		$this->form_validation->set_rules('end_date', '利用終了日', 'callback_date_check');
 
@@ -537,7 +537,8 @@ class Operators extends My_Controller
 	 */
 	private function check_validate_service_provider($operator_id)
 	{
-		$arr_agreement = $this->get_agreement();
+		$this->session->sess_destroy();
+		$arr_service_providers = $this->get_service_providers();
 		$this->service_providers = $this->operator_service_providers_model->get_by_id($operator_id);
 		foreach ($this->service_providers as $service_provider)
 		{
@@ -546,12 +547,15 @@ class Operators extends My_Controller
 			$this->session->set_flashdata('identifying_code_' . $service_provider["service_provider"], $this->input->post('identifying_code_' . $service_provider["service_provider"]));
 			if ($input_agreement_check === self::$CONTRACT_STATUS_ONE)
 			{
-				foreach ($arr_agreement as $agreement)
+				foreach ($arr_service_providers as $service_provider_item)
 				{
-					if ($service_provider["service_provider"] == $agreement["id"])
+					if ($service_provider["service_provider"] == $service_provider_item["id"])
 					{
-						$this->form_validation->set_rules('identifying_code_' . $service_provider["service_provider"], $agreement["name"], 'required|max_length[255]');
-						$this->session->set_flashdata('error_message_update_1', "利用終了日は利用開始");
+						$this->form_validation->set_rules('identifying_code_' . $service_provider["service_provider"], $service_provider_item["name"], 'required|max_length[255]');
+						if ($this->form_validation->run() === FALSE)
+						{
+							$this->session->set_flashdata('error_service_provider_upd_'. $service_provider["service_provider"],validation_errors());
+						}
 					}
 				}
 			}
@@ -601,17 +605,15 @@ class Operators extends My_Controller
 				}
 			}
 		}
-		$this->session->set_flashdata('arr_ip_address_id_delete', $this->arr_ip_address_id_delete);
-		$this->session->set_flashdata('arr_ip_address', $arr_ip_address);
+		$this->data['arr_ip_address_id_delete'] = $this->arr_ip_address_id_delete;
+		$this->data['arr_ip_address'] = $arr_ip_address;
 	}
 
 	/**
 	 * Validate IP Address
 	 *
-	 * @param string $ip
-	 *        	IP address
-	 * @param string $which
-	 *        	IP protocol: 'ipv4' or 'ipv6'
+	 * @param string $ip IP address
+	 * @param string $which IP protocol: 'ipv4' or 'ipv6'
 	 * @return bool
 	 */
 	public function valid_ip($ip, $which = '')
@@ -649,5 +651,61 @@ class Operators extends My_Controller
 			$this->form_validation->set_message('date_check', '{field}は無効値です。');
 			return false;
 		}
+	}
+
+	/**
+	 * date書式チェック
+	 *
+	 * @param unknown $date
+	 * @return boolean
+	 */
+	public function arrangementData()
+	{
+		log_message('debug', "------------------------function arrangementData--------------");
+		log_message('debug', "------------------------: " . $this->input->post('column'));
+ 		$per_page = $this->ajax_pagination_operators->per_page;
+ 		$config = $this->config_ajax_paging('#operators_list', $this->operators_model, 'operators/ajax_pagination_operators_data', $per_page, $this->input->post());
+ 		$this->ajax_pagination_operators->initialize($config);
+ 		$param = null;
+ 		$column = $this->input->post('column');
+ 		$sort_type = $this->input->post('sort');
+ 		$search_name = $this->input->post('search_name');
+ 		$service_provider = $this->input->post('service_provider');
+ 		$sort_service_provider = $this->input->post('sort_service_provider');
+ 		$arr_service_providers = $this->get_service_providers();
+ 		$search_param = [
+ 				'column' => $column,
+ 				'sort_type' => $sort_type,
+ 				'sort_service_provider' => $sort_service_provider,
+ 				'search_name' => $search_name,
+ 				'service_provider' => $service_provider
+ 		];
+ 		if ($this->input->post())
+ 		{
+ 			$param = [
+ 					'limit' => $per_page,
+ 					'param_search' => $search_param,
+ 					'arr_service_providers' => $arr_service_providers
+ 			];
+ 		}
+ 		else
+ 		{
+ 			$param = [
+ 					'limit' => $per_page,
+ 					'arr_service_providers' => $arr_service_providers
+ 			];
+ 		}
+
+ 		$this->data['operators']= $this->operators_model->get_rows($param);
+		// load the view
+		$arr_service_providers = $this->get_service_providers();
+		$this->data['condition_service_providers'] = array();
+		foreach ($arr_service_providers as $service_provider_item)
+		{
+			array_push($this->data['condition_service_providers'], $service_provider_item["id"]);
+		}
+		$this->data['arr_service_providers'] = $arr_service_providers;
+
+		$this->load->view('manage/operator/operators_ajax_pagination_data', $this->data);
 	}
 }

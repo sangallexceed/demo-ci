@@ -1,4 +1,4 @@
-
+		<div id="wrapper">
 			<div id="page-wrapper">
 				<div class="container-fluid">
 					<div class="row">
@@ -27,17 +27,17 @@
 					<?php endif; ?>
 					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operators/update/'.$operator->operator_id) ?>">
 						<input type="hidden" name="operator_id" value="<?php echo $operator->operator_id; ?>" />
-						<?php if ($this->session->has_userdata('arr_ip_address')): ?>
-							<input type="hidden" name="count_ip_address" value="<?= count($this->session->flashdata('arr_ip_address')); ?>" />
+						<?php if (isset($arr_ip_address)): ?>
+							<input type="hidden" name="count_ip_address" value="<?= count($arr_ip_address); ?>" />
 						<?php else: ?>
 							<input type="hidden" name="count_ip_address" value="<?= count($ip_addresss); ?>" />
 						<?php endif;?>
 
-						<?php if ($this->session->has_userdata('arr_ip_address_id_delete')): ?>
-							<?php foreach($this->session->flashdata('arr_ip_address_id_delete') as $ip_address_id_dlt) : ?>
+						<?php if (isset($arr_ip_address_id_delete)): ?>
+							<?php foreach($arr_ip_address_id_delete as $ip_address_id_dlt) : ?>
 								<input type="hidden" name="ip_address_id_delete_<?= $count_ip_address_id_delete ++ ?>" value="<?= $ip_address_id_dlt ?>" />
 							<?php endforeach;?>
-							<input type="hidden" name="count_arr_ip_address_id_delete" value="<?= count($this->session->flashdata('arr_ip_address_id_delete')) ?>" />
+							<input type="hidden" name="count_arr_ip_address_id_delete" value="<?= count($arr_ip_address_id_delete) ?>" />
 						<?php endif;?>
 
 						<div class="panel panel-default">
@@ -45,11 +45,15 @@
 								<div class="row">
 									<div class="col-lg-6">
 										<legend>事業者情報</legend>
+										<?php if($this->session->has_userdata('error_business_name_upd') && set_value('business_name') === '') : ?>
+										<div class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3"><span class="text-danger">※</span>事業者名</label>
 											<div class="col-md-9">
-											<?php if ($this->session->has_userdata('business_name')): ?>
-												<input type="text" class="form-control" name="business_name"  placeholder="" value="<?= html_escape($this->session->flashdata('business_name')); ?>">
+											<?php if (isset($business_name)): ?>
+												<input type="text" class="form-control" name="business_name"  placeholder="" value="<?= html_escape($business_name); ?>">
 											<?php else: ?>
 												<input type="text" class="form-control" name="business_name"  placeholder="" value="<?= html_escape($operator->operator_name); ?>">
 											<?php endif;?>
@@ -58,8 +62,8 @@
 										<div class="form-group">
 											<label class="control-label col-md-3">利用開始日</label>
 											<div class="col-md-4">
-											<?php if ($this->session->has_userdata('start_date')): ?>
-												<input type="text" class="form-control" name="start_date" id="start_date" placeholder="" value="<?= html_escape($this->session->flashdata('start_date')); ?>" >
+											<?php if (isset($start_date0)): ?>
+												<input type="text" class="form-control" name="start_date" id="start_date" placeholder="" value="<?= html_escape($start_date); ?>" >
 											<?php else: ?>
 												<input type="text" class="form-control" name="start_date" id="start_date"  placeholder="" value="<?php if(isset($operator->start_date) && $operator->start_date != '0000-00-00'){ echo date("Y/m/d", strtotime($operator->start_date));}?>">
 											<?php endif;?>
@@ -68,8 +72,8 @@
 										<div class="form-group">
 											<label class="control-label col-md-3">利用終了日</label>
 											<div class="col-md-4">
-												<?php if ($this->session->has_userdata('end_date')): ?>
-													<input type="text" class="form-control" name="end_date" id="end_date" placeholder="" value="<?= html_escape($this->session->flashdata('end_date')); ?>" >
+												<?php if (isset($end_date)): ?>
+													<input type="text" class="form-control" name="end_date" id="end_date" placeholder="" value="<?= html_escape($end_date); ?>" >
 												<?php else: ?>
 													<input type="text" class="form-control" name="end_date" id="end_date"  placeholder="" value="<?php if(isset($operator->end_date) && ($operator->end_date != '0000-00-00')){ echo date("Y/m/d", strtotime($operator->end_date));}?>">
 												<?php endif;?>
@@ -84,8 +88,8 @@
 												<button type="button" class="btn btn-primary" name="add_ip_address" onclick="addIPAddress();"><i class="fa fa-plus fa-fw"></i> 追加</button>
 											</div>
 										</div>
-										<?php if ($this->session->has_userdata('arr_ip_address')): ?>
-										<?php foreach($this->session->flashdata('arr_ip_address') as $ip_address) : ?>
+										<?php if (isset($arr_ip_address)): ?>
+										<?php foreach($arr_ip_address as $ip_address) : ?>
 										<div class="form-group" id="group_add_ip_<?= $count_ip_address ++ ?>">
 											<label class="control-label col-md-3">No.<?= $count_ip_address - 1 ?></label>
 											<div class="col-md-4">
@@ -128,9 +132,9 @@
 								<div class="row">
 									<?php foreach($service_providers as $data) : ?>
 									<div class="col-lg-6">
-										<?php foreach($agreements as $agreements_id) : ?>
-										<?php if ($data['service_provider'] == $agreements_id['id']): ?>
-										<legend><?= $agreements_id['name'] ?></legend>
+										<?php foreach($arr_service_providers as $service_provider_item) : ?>
+										<?php if ($data['service_provider'] == $service_provider_item['id']): ?>
+										<legend><?= $service_provider_item['name'] ?></legend>
 										<?php endif;?>
 										<?php endforeach;?>
 										<div class="form-group">
@@ -152,7 +156,11 @@
 												<?php endif;?>
 											</div>
 										</div>
+										<?php if($this->session->has_userdata('error_service_provider_upd_'. $data['service_provider']) && $this->session->flashdata('identifying_code_'.$data['service_provider']) === '') : ?>
+										<div id="form_group_indentify_code_ud_<?= $data['service_provider'] ?>" class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3">識別コード</label>
 											<div class="col-md-6">
 												<?php if ($this->session->has_userdata('chk_input_agreement_'.$data['service_provider'])): ?>
@@ -242,6 +250,7 @@
 				$("#agreement_"+id+'_i').removeClass("fa-check-circle-o");
 				$("#agreement_"+id+'_i').addClass("fa-circle-o");
 				$("#agreement_"+id).addClass("btn-outline");
+				$("#form_group_indentify_code_ud_"+id).removeClass("has-error");
 			};
 			function selectAgreement(id) {
 				$("#agreement_"+id+'_i').addClass("fa-check-circle-o");

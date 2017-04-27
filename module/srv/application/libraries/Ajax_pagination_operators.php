@@ -13,7 +13,7 @@
 class Ajax_pagination_operators {
     var $base_url        = ''; // The page we are linking to
     var $total_rows      = ''; // Total number of items (database results)
-    var $per_page        = 5; // Max number of items you want shown per page
+    var $per_page        = 10; // Max number of items you want shown per page
     var $num_links       =  2; // Number of "digit" links to show before/after the currently viewed page
     var $cur_page        =  0; // The current page being viewed
     var $first_link      = '&lsaquo; 最初';
@@ -178,13 +178,19 @@ class Ajax_pagination_operators {
         ?>
         <script>
         function getData(page) {
-        	var search_name = $("input[name=search_name]").val();
-            var service_provider = $("input[name=service_provider]").val();
+        	var column = $('input[name=column_name_hidden]').val();
+        	var sort = $('input[name=sort_type_hidden]').val();
+        	var sort_service_provider = $('input[name=sort_service_provider_hidden]').val();
+        	var search_name = $('input[name=search_name_hidden]').val();
+            var service_provider = $('input[name=service_provider_hidden]').val();
             $.ajax({
                 method: "POST",
                 url: "<?php echo $this->base_url; ?>" + page,
                 data: {
                     page: page,
+                    column: column,
+					sort: sort,
+					sort_service_provider: sort_service_provider,
                     search_name: search_name,
                     service_provider: service_provider
                 },
