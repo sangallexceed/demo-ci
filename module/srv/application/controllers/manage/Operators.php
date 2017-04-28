@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 use phpDocumentor\Reflection\Types\This;
 
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -21,6 +21,7 @@ class Operators extends My_Controller
 
 	public function index()
 	{
+		
 		$per_page = $this->ajax_pagination_operators->per_page;
 		$config = $this->config_ajax_paging('#operators_list', $this->operators_model, 'operators/ajax_pagination_operators_data', $per_page, null);
 		$this->ajax_pagination_operators->initialize($config);
@@ -292,17 +293,14 @@ class Operators extends My_Controller
 	 */
 	private function check_validate_create()
 	{
-		$this->form_validation->set_rules('business_name', '事業者名', 'trim|required');
-		if ($this->form_validation->run() === FALSE)
-		{
-			$this->session->set_flashdata('error_business_name_crt', validation_errors());
-		}
+		$this->form_validation->set_rules('business_name', '事業者名', 'trim|required|max_length[50]');
 		$this->form_validation->set_rules('start_date', '利用開始日', 'callback_date_check');
 		$this->form_validation->set_rules('end_date', '利用終了日', 'callback_date_check');
 
 		$business_name = $this->input->post('business_name');
 		$start_date = $this->input->post('start_date');
 		$end_date = $this->input->post('end_date');
+
 
 		// check service provider
 		$this->check_validate_service_provider_crt();
@@ -311,7 +309,6 @@ class Operators extends My_Controller
 
 		if ($this->form_validation->run() === FALSE)
 		{
-			log_message('debug', "=========================error:" . validation_errors());
 			$this->session->set_flashdata('error_message_create', validation_errors());
 			return false;
 		}
@@ -335,37 +332,27 @@ class Operators extends My_Controller
 	{
 		$arr_ip_address_crt = array();
 		$this->count_error = 0;
-		$this->message_error = '';
 		$count_ip_address_crt = $this->input->post('count_ip_address_crt');
 		for ($i = 0; $i <= $count_ip_address_crt; $i++)
 		{
+			$this->message_error = '';
 			$ip_address = $this->input->post('ip_address_' . $i);
 			if (isset($ip_address) && !empty($ip_address))
 			{
 				$ip_addresss = array(
 						'ip_address' => $ip_address
 				);
-				array_push($arr_ip_address_crt, $ip_addresss);
 				// check ipv4 for ip_address
 				if (!$this->valid_ip($ip_address, "ipv4"))
 				{
 					$this->message_error = '正しい形式で入力してください';
 					$this->count_error = 1;
 				}
-				else
-				{
-					// get ip_address
-					$model_ip_addresss = $this->operator_ip_addresss_model->get_ip_address($ip_address);
-					// check exist ip_address
-					if ($model_ip_addresss != 0)
-					{
-						$this->message_error = 'Ip address existing';
-						$this->count_error = 1;
-					}
-				}
+				$ip_addresss['message_error_ip_address'] = $this->message_error;
+				array_push($arr_ip_address_crt, $ip_addresss);
 			}
 		}
-		//$this->session->set_flashdata('arr_ip_address_crt', $arr_ip_address_crt);
+		log_message('debug', "================================arr_ip_address_crt : " . print_r($arr_ip_address_crt, true));
 		$this->data['arr_ip_address_crt'] = $arr_ip_address_crt;
 	}
 
@@ -383,10 +370,6 @@ class Operators extends My_Controller
 			if ($input_agreement_check === self::$CONTRACT_STATUS_ONE)
 			{
 				$this->form_validation->set_rules('indentify_code_' . $service_provider["id"], $service_provider["name"], 'required|max_length[255]');
-				if ($this->form_validation->run() === FALSE)
-				{
-					$this->session->set_flashdata('error_service_provider_'. $service_provider["id"],validation_errors());
-				}
 			}
 		}
 	}
@@ -537,7 +520,7 @@ class Operators extends My_Controller
 	 */
 	private function check_validate_service_provider($operator_id)
 	{
-		$this->session->sess_destroy();
+		//$this->session->sess_destroy();
 		$arr_service_providers = $this->get_service_providers();
 		$this->service_providers = $this->operator_service_providers_model->get_by_id($operator_id);
 		foreach ($this->service_providers as $service_provider)
@@ -552,10 +535,6 @@ class Operators extends My_Controller
 					if ($service_provider["service_provider"] == $service_provider_item["id"])
 					{
 						$this->form_validation->set_rules('identifying_code_' . $service_provider["service_provider"], $service_provider_item["name"], 'required|max_length[255]');
-						if ($this->form_validation->run() === FALSE)
-						{
-							$this->session->set_flashdata('error_service_provider_upd_'. $service_provider["service_provider"],validation_errors());
-						}
 					}
 				}
 			}
@@ -569,7 +548,6 @@ class Operators extends My_Controller
 	{
 		$count_ip_address = $this->input->post('count_ip_address');
 		$this->count_error = 0;
-		$this->message_error = '';
 		$arr_ip_address = array();
 		$this->arr_ip_address_id_delete = array();
 		$count_arr_ip_address_id_delete = $this->input->post('count_arr_ip_address_id_delete');
@@ -583,6 +561,7 @@ class Operators extends My_Controller
 		}
 		for ($i = 1; $i <= $count_ip_address; $i++)
 		{
+			$this->message_error = '';
 			$ip_address = $this->input->post('ip_address_' . $i);
 			$ip_address_id = $this->input->post('operator_ip_address_' . $i);
 			$ip_address_id_delete = $this->input->post('delete_operator_ip_address_' . $i);
@@ -597,12 +576,13 @@ class Operators extends My_Controller
 						'ip_address' => $ip_address,
 						'ip_address_id' => $ip_address_id
 				);
-				array_push($arr_ip_address, $ip_addresss);
 				if (!$this->valid_ip($ip_address, "ipv4"))
 				{
 					$this->message_error = '正しい形式で入力してください';
 					$this->count_error = 1;
 				}
+				$ip_addresss['message_error_ip_address'] = $this->message_error;
+				array_push($arr_ip_address, $ip_addresss);
 			}
 		}
 		$this->data['arr_ip_address_id_delete'] = $this->arr_ip_address_id_delete;

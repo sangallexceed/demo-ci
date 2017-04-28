@@ -12,26 +12,20 @@ use PhpParser\Node\Stmt\Echo_;
 							</h1>
 						</div>
 					</div>
-					<?php if ($this->session->flashdata('error_message_create')): ?>
-						<div class="alert alert-dismissible alert-danger">
-							<button type="button" class="close" data-dismiss="alert">×</button>
-							<strong>エラー</strong>
-							<p><?= $this->session->flashdata('error_message_create') ?></p>
-						</div>
-						<?php $this->session->unmark_flash('error_message_create'); ?>
-					<?php endif; ?>
 					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operators/create') ?>">
 						<?php if (isset($arr_ip_address_crt)): ?>
 						<input type="hidden" name="count_ip_address_crt" value="<?= count($arr_ip_address_crt); ?>" />
+						<input type="hidden" name="number_ip_address_crt" value="<?= count($arr_ip_address_crt); ?>" />
 						<?php else: ?>
 						<input type="hidden" name="count_ip_address_crt" value="" />
+						<input type="hidden" name="number_ip_address_crt" value="" />
 						<?php endif;?>
 						<div class="panel panel-default">
 							<div class="panel-body form-horizontal">
 								<div class="row">
 									<div class="col-lg-6">
 										<legend>事業者情報</legend>
-										<?php if($this->session->has_userdata('error_business_name_crt') && set_value('business_name') === '') : ?>
+										<?php if(form_error('business_name') != '') : ?>
 										<div class="form-group has-error">
 										<?php else: ?>
 										<div class="form-group">
@@ -39,18 +33,29 @@ use PhpParser\Node\Stmt\Echo_;
 											<label class="control-label col-md-3"><span class="text-danger">※</span>事業者名</label>
 											<div class="col-md-9">
 												<input type="text" class="form-control" name="business_name"  placeholder=""  value="<?= set_value('business_name',''); ?>" >
+												<?php echo form_error('business_name', '<div class="help-block">', '</div>');?>
 											</div>
 										</div>
+										<?php if(form_error('start_date') != '') : ?>
+										<div class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3">利用開始日</label>
 											<div class="col-md-4">
 												<input class="form-control" id="start_date" name="start_date" placeholder="" value="<?php echo set_value('start_date', ''); ?>" >
+												<?php echo form_error('start_date', '<div class="help-block">', '</div>');?>
 											</div>
 										</div>
+										<?php if(form_error('end_date') != '') : ?>
+										<div class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3">利用終了日</label>
 											<div class="col-md-4">
 												<input class="form-control" id="end_date" name="end_date" placeholder="" value="<?php echo set_value('end_date', ''); ?>" >
+												<?php echo form_error('end_date', '<div class="help-block">', '</div>');?>
 											</div>
 										</div>
 									</div>
@@ -64,7 +69,11 @@ use PhpParser\Node\Stmt\Echo_;
 										</div>
 										<?php if (isset($arr_ip_address_crt)): ?>
 										<?php foreach($arr_ip_address_crt as $ip_address) : ?>
-										<div class="form-group" id="group_add_ip_<?= $count_ip_address_crt ++ ?>">
+										<?php if ($ip_address['message_error_ip_address'] != '') : ?>
+											<div class="form-group has-error" id="group_add_ip_<?= $count_ip_address_crt ++ ?>">
+										<?php else: ?>
+											<div class="form-group" id="group_add_ip_<?= $count_ip_address_crt ++ ?>">
+										<?php endif;?>
 											<label class="control-label col-md-3">No.<?= $count_ip_address_crt - 1 ?></label>
 											<div class="col-md-4">
 												<div class="input-group">
@@ -74,6 +83,9 @@ use PhpParser\Node\Stmt\Echo_;
 														<button class="btn btn-default" id="<?= $count_ip_address_crt - 1 ?>" onclick="removeGroupIP(this.id);" type="button"><i class="fa fa-times" ></i> 削除</button>'
 													</span>
 												</div>
+												<?php if ($ip_address['message_error_ip_address'] != '') : ?>
+												<div class="help-block"><?php echo $ip_address['message_error_ip_address'] ?></div>
+												<?php endif;?>
 											</div>
 										</div>
 										<?php endforeach;?>
@@ -98,7 +110,7 @@ use PhpParser\Node\Stmt\Echo_;
 												<input type="hidden"  name="chk_input_agreement_<?= $data['id'] ?>" value="<?php echo set_value('chk_input_agreement_'.$data['id'],''); ?>" />
 											</div>
 										</div>
-										<?php if($this->session->has_userdata('error_service_provider_'. $data["id"]) && set_value('indentify_code_'.$data['id']) === '') : ?>
+										<?php if(form_error('indentify_code_'.$data['id']) != '') : ?>
 										<div id="form_group_indentify_code_<?= $data['id'] ?>" class="form-group has-error">
 										<?php else: ?>
 										<div class="form-group">
@@ -106,6 +118,7 @@ use PhpParser\Node\Stmt\Echo_;
 											<label class="control-label col-md-3">識別コード</label>
 											<div class="col-md-6">
 												<input type="text" class="form-control" name="indentify_code_<?= $data['id'] ?>"  placeholder="" id="indentify_code" <?= set_value('chk_input_agreement_'.$data['id']) == 0 ? 'disabled' : '' ?> value="<?php echo set_value('indentify_code_'.$data['id'],''); ?>">
+												<?php echo form_error('indentify_code_'.$data['id'], '<span id="error_message_indentify_code_'.$data['id'].'" class="help-block">', '</span>');?>
 											</div>
 										</div>
 									</div>
@@ -150,8 +163,10 @@ use PhpParser\Node\Stmt\Echo_;
 			});
 			var click =$("input[name=count_ip_address_crt]:hidden").val();
 			function addIPAddress() {
-				if(click < 100){
+				var number_ip_address_crt = $("input[name=number_ip_address_crt]:hidden").val();
+				if(number_ip_address_crt < 100){
 					click++;
+					number_ip_address_crt ++;
 					var dummy = '<div class="form-group" id="group_add_ip_'+click+'">'
 						+ '<label class="control-label col-md-3" id="label_'+ click +'">No.'+ click +'</label>'
 						+ '<div class="col-md-4">'
@@ -165,6 +180,14 @@ use PhpParser\Node\Stmt\Echo_;
 						+ '</div>';
 		    		document.getElementById('ip_address').innerHTML += dummy;
 		    		$("input[name=count_ip_address_crt]").val(click);
+		    		if(number_ip_address_crt > 0 && number_ip_address_crt < click)
+		    		{
+		    			$("input[name=number_ip_address_crt]:hidden").val(number_ip_address_crt);
+			    	}
+		    		else
+		    		{
+		    			$("input[name=number_ip_address_crt]:hidden").val(click);
+			    	}
 				}
 			};
 
@@ -172,6 +195,8 @@ use PhpParser\Node\Stmt\Echo_;
 				$("#group_add_ip_"+id).remove();
 				var value= $("input[name=ip_address_"+id+"]").val();
 				var list= $("input[name=count_ip_address_crt]").val();
+				var number_ip_address_crt = $("input[name=number_ip_address_crt]:hidden").val();
+				 $("input[name=number_ip_address_crt]:hidden").val(parseInt(number_ip_address_crt) - 1);
 			};
 
 			function selectAgreement(id, name) {
@@ -189,6 +214,7 @@ use PhpParser\Node\Stmt\Echo_;
 					$("#agreement_"+id+'_i').addClass("fa-circle-o");
 					$("#agreement_"+id).addClass("btn-outline");
 					$("#form_group_indentify_code_"+id).removeClass("has-error");
+					$( "#error_message_indentify_code_"+id ).remove();
 				}
 				else
 				{

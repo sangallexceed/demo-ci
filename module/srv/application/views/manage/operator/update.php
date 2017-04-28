@@ -9,22 +9,6 @@
 							</h1>
 						</div>
 					</div>
-					　<?php if ($this->session->flashdata('message')): ?>
-						<div class="alert alert-dismissible alert-info">
-							<button type="button" class="close" data-dismiss="alert">×</button>
-							<strong>メッセージ</strong>
-							<p><?= $this->session->flashdata('message') ?></p>
-						</div>
-						<?php $this->session->unmark_flash('message'); ?>
-					<?php endif; ?>
-					<?php if ($this->session->flashdata('error_message_update')): ?>
-					<div class="alert alert-dismissible alert-danger">
-						<button type="button" class="close" data-dismiss="alert">×</button>
-							<strong>エラー</strong>
-							<p><?= $this->session->flashdata('error_message_update') ?></p>
-					</div>
-					<?php $this->session->unmark_flash('error_message_update'); ?>
-					<?php endif; ?>
 					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operators/update/'.$operator->operator_id) ?>">
 						<input type="hidden" name="operator_id" value="<?php echo $operator->operator_id; ?>" />
 						<?php if (isset($arr_ip_address)): ?>
@@ -32,7 +16,6 @@
 						<?php else: ?>
 							<input type="hidden" name="count_ip_address" value="<?= count($ip_addresss); ?>" />
 						<?php endif;?>
-
 						<?php if (isset($arr_ip_address_id_delete)): ?>
 							<?php foreach($arr_ip_address_id_delete as $ip_address_id_dlt) : ?>
 								<input type="hidden" name="ip_address_id_delete_<?= $count_ip_address_id_delete ++ ?>" value="<?= $ip_address_id_dlt ?>" />
@@ -90,7 +73,11 @@
 										</div>
 										<?php if (isset($arr_ip_address)): ?>
 										<?php foreach($arr_ip_address as $ip_address) : ?>
-										<div class="form-group" id="group_add_ip_<?= $count_ip_address ++ ?>">
+										<?php if ($ip_address['message_error_ip_address'] != '') : ?>
+											<div class="form-group has-error" id="group_add_ip_<?= $count_ip_address ++ ?>">
+										<?php else: ?>
+											<div class="form-group" id="group_add_ip_<?= $count_ip_address ++ ?>">
+										<?php endif;?>
 											<label class="control-label col-md-3">No.<?= $count_ip_address - 1 ?></label>
 											<div class="col-md-4">
 												<div class="input-group">
@@ -100,6 +87,9 @@
 														<button class="btn btn-default" id="<?= $count_ip_address - 1 ?>" onclick="removeGroupIP(this.id);" type="button"><i class="fa fa-times" ></i> 削除</button>'
 													</span>
 												</div>
+												<?php if ($ip_address['message_error_ip_address'] != '') : ?>
+												<div class="help-block"><?php echo $ip_address['message_error_ip_address'] ?></div>
+												<?php endif;?>
 											</div>
 										</div>
 										<input type="hidden" name="delete_operator_ip_address_<?= $count_ip_address - 1 ?>" value="" />
@@ -140,8 +130,7 @@
 										<div class="form-group">
 											<label class="control-label col-md-3"><span class="text-danger">※</span>契約状況</label>
 											<div class="col-md-9 btn-group" id="contract_status_<?= $data['service_provider'] ?>">
-												<?php
-												if ($this->session->has_userdata('chk_input_agreement_'.$data['service_provider'])): ?>
+												<?php if ($this->session->has_userdata('chk_input_agreement_'.$data['service_provider'])): ?>
 													<button type="button" id="no_agreement_<?= $data['service_provider'] ?>" class="btn btn-primary <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 1? 'btn-outline': '' ?>" onclick="selectNoAgreement(<?= $data['service_provider'] ?>);">
 													<i class="fa <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 0 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="no_agreement_<?= $data['service_provider'] ?>_i"></i> 未契約</button>
 													<button type="button" id="agreement_<?= $data['service_provider'] ?>"  class="btn btn-primary <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 0? 'btn-outline': '' ?>" onclick="selectAgreement(<?= $data['service_provider'] ?>);">
@@ -156,7 +145,7 @@
 												<?php endif;?>
 											</div>
 										</div>
-										<?php if($this->session->has_userdata('error_service_provider_upd_'. $data['service_provider']) && $this->session->flashdata('identifying_code_'.$data['service_provider']) === '') : ?>
+										<?php if(form_error('identifying_code_'.$data['service_provider']) != '') : ?>
 										<div id="form_group_indentify_code_ud_<?= $data['service_provider'] ?>" class="form-group has-error">
 										<?php else: ?>
 										<div class="form-group">
@@ -166,8 +155,10 @@
 												<?php if ($this->session->has_userdata('chk_input_agreement_'.$data['service_provider'])): ?>
 													<input type="text" class="form-control" name="identifying_code_<?= $data['service_provider'] ?>"  placeholder="" id="identifying_code"
 													value="<?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 1? html_escape($this->session->flashdata('identifying_code_'.$data['service_provider'])) : '' ?>" <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 1? '' : 'disabled' ?>>
+													<?php echo form_error('identifying_code_'.$data['service_provider'], '<span id="error_message_indentify_code_'.$data['service_provider'].'" class="help-block">', '</span>');?>
 												<?php else: ?>
 													<input type="text" class="form-control" name="identifying_code_<?= $data['service_provider'] ?>"  placeholder="" id="identifying_code" value="<?= $data['contract_status'] == 1? html_escape($data['identifying_code']) : '' ?>"  <?= $data['contract_status'] == 1? '' : 'disabled' ?>>
+													<?php echo form_error('identifying_code_'.$data['service_provider'], '<span id="error_message_indentify_code_'.$data['service_provider'].'" class="help-block">', '</span>');?>
 												<?php endif;?>
 											</div>
 										</div>
