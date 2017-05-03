@@ -4,25 +4,20 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<h1 class="page-header">
-								<a href="<?= site_url('operators') ?>"><i class="fa fa-arrow-circle-left fa-fw"></i></a>
+								<a href="<?= site_url('operator') ?>"><i class="fa fa-arrow-circle-left fa-fw"></i></a>
 								事業者：編集
 							</h1>
 						</div>
 					</div>
-					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operators/update/'.$operator->operator_id) ?>">
+					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operator/update/'.$operator->operator_id) ?>">
 						<input type="hidden" name="operator_id" value="<?php echo $operator->operator_id; ?>" />
 						<?php if (isset($arr_ip_address)): ?>
 							<input type="hidden" name="count_ip_address" value="<?= count($arr_ip_address); ?>" />
+							<input type="hidden" name="number_ip_address" value="<?= count($arr_ip_address); ?>" />
 						<?php else: ?>
 							<input type="hidden" name="count_ip_address" value="<?= count($ip_addresss); ?>" />
+							<input type="hidden" name="number_ip_address" value="<?= count($ip_addresss); ?>" />
 						<?php endif;?>
-						<?php if (isset($arr_ip_address_id_delete)): ?>
-							<?php foreach($arr_ip_address_id_delete as $ip_address_id_dlt) : ?>
-								<input type="hidden" name="ip_address_id_delete_<?= $count_ip_address_id_delete ++ ?>" value="<?= $ip_address_id_dlt ?>" />
-							<?php endforeach;?>
-							<input type="hidden" name="count_arr_ip_address_id_delete" value="<?= count($arr_ip_address_id_delete) ?>" />
-						<?php endif;?>
-
 						<div class="panel panel-default">
 							<div class="panel-body form-horizontal">
 								<div class="row">
@@ -92,7 +87,6 @@
 												<?php endif;?>
 											</div>
 										</div>
-										<input type="hidden" name="delete_operator_ip_address_<?= $count_ip_address - 1 ?>" value="" />
 										<?php endforeach;?>
 										<?php else: ?>
 										<?php if (count($ip_addresss) <= 0): {echo '';} else: ?>
@@ -109,7 +103,6 @@
 												</div>
 											</div>
 										</div>
-										<input type="hidden" name="delete_operator_ip_address_<?= $count_ip_address - 1 ?>" value="" />
 										<?php endforeach;?>
 										<?php endif; ?>
 										<?php endif;?>
@@ -130,35 +123,35 @@
 										<div class="form-group">
 											<label class="control-label col-md-3"><span class="text-danger">※</span>契約状況</label>
 											<div class="col-md-9 btn-group" id="contract_status_<?= $data['service_provider'] ?>">
-												<?php if ($this->session->has_userdata('chk_input_agreement_'.$data['service_provider'])): ?>
-													<button type="button" id="no_agreement_<?= $data['service_provider'] ?>" class="btn btn-primary <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 1? 'btn-outline': '' ?>" onclick="selectNoAgreement(<?= $data['service_provider'] ?>);">
-													<i class="fa <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 0 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="no_agreement_<?= $data['service_provider'] ?>_i"></i> 未契約</button>
-													<button type="button" id="agreement_<?= $data['service_provider'] ?>"  class="btn btn-primary <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 0? 'btn-outline': '' ?>" onclick="selectAgreement(<?= $data['service_provider'] ?>);">
-													<i class="fa <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 1 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="agreement_<?= $data['service_provider'] ?>_i"></i> 契約中</button>
-													<input type="hidden"  name="chk_input_agreement_<?= $data['service_provider'] ?>" value="<?= html_escape($this->session->flashdata('chk_input_agreement_'.$data['service_provider'])); ?>" />
+												<?php if ($this->session->has_userdata('chk_input_service_provider_'.$data['service_provider'])): ?>
+													<button type="button" id="no_service_provider_<?= $data['service_provider'] ?>" class="btn btn-primary <?= $this->session->flashdata('chk_input_service_provider_'.$data['service_provider']) == 1? 'btn-outline': '' ?>" name="no_service_provider" onclick="selectServiceprovider(<?= $data['service_provider'] ?>, this.name);">
+													<i class="fa <?= $this->session->flashdata('chk_input_service_provider_'.$data['service_provider']) == 0 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="no_service_provider_<?= $data['service_provider'] ?>_i"></i> 未契約</button>
+													<button type="button" id="service_provider_<?= $data['service_provider'] ?>"  class="btn btn-primary <?= $this->session->flashdata('chk_input_service_provider_'.$data['service_provider']) == 0? 'btn-outline': '' ?>" name="ye_service_provider" onclick="selectServiceprovider(<?= $data['service_provider'] ?>, this.name);">
+													<i class="fa <?= $this->session->flashdata('chk_input_service_provider_'.$data['service_provider']) == 1 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="service_provider_<?= $data['service_provider'] ?>_i"></i> 契約中</button>
+													<input type="hidden"  name="chk_input_service_provider_<?= $data['service_provider'] ?>" value="<?= html_escape($this->session->flashdata('chk_input_service_provider_'.$data['service_provider'])); ?>" />
 												<?php else: ?>
-													<button type="button" id="no_agreement_<?= $data['service_provider'] ?>" class="btn btn-primary <?= $data['contract_status'] == 1? 'btn-outline': '' ?>" onclick="selectNoAgreement(<?= $data['service_provider'] ?>);">
-													<i class="fa <?= $data['contract_status'] == 0 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="no_agreement_<?= $data['service_provider'] ?>_i"></i> 未契約</button>
-													<button type="button" id="agreement_<?= $data['service_provider'] ?>"  class="btn btn-primary <?= $data['contract_status'] == 0? 'btn-outline': '' ?>" onclick="selectAgreement(<?= $data['service_provider'] ?>);">
-													<i class="fa <?= $data['contract_status'] == 1 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="agreement_<?= $data['service_provider'] ?>_i"></i> 契約中</button>
-													<input type="hidden"  name="chk_input_agreement_<?= $data['service_provider'] ?>" value="<?= html_escape($data['contract_status']); ?>" />
+													<button type="button" id="no_service_provider_<?= $data['service_provider'] ?>" class="btn btn-primary <?= $data['contract_status'] == 1? 'btn-outline': '' ?>" name="no_service_provider" onclick="selectServiceprovider(<?= $data['service_provider'] ?>, this.name);">
+													<i class="fa <?= $data['contract_status'] == 0 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="no_service_provider_<?= $data['service_provider'] ?>_i"></i> 未契約</button>
+													<button type="button" id="service_provider_<?= $data['service_provider'] ?>"  class="btn btn-primary <?= $data['contract_status'] == 0? 'btn-outline': '' ?>" name="ye_service_provider" onclick="selectServiceprovider(<?= $data['service_provider'] ?>, this.name);">
+													<i class="fa <?= $data['contract_status'] == 1 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="service_provider_<?= $data['service_provider'] ?>_i"></i> 契約中</button>
+													<input type="hidden"  name="chk_input_service_provider_<?= $data['service_provider'] ?>" value="<?= html_escape($data['contract_status']); ?>" />
 												<?php endif;?>
 											</div>
 										</div>
 										<?php if(form_error('identifying_code_'.$data['service_provider']) != '') : ?>
-										<div id="form_group_indentify_code_ud_<?= $data['service_provider'] ?>" class="form-group has-error">
+										<div id="form_group_indentifying_code_<?= $data['service_provider'] ?>" class="form-group has-error">
 										<?php else: ?>
 										<div class="form-group">
 										<?php endif;?>
 											<label class="control-label col-md-3">識別コード</label>
 											<div class="col-md-6">
-												<?php if ($this->session->has_userdata('chk_input_agreement_'.$data['service_provider'])): ?>
+												<?php if ($this->session->has_userdata('chk_input_service_provider_'.$data['service_provider'])): ?>
 													<input type="text" class="form-control" name="identifying_code_<?= $data['service_provider'] ?>"  placeholder="" id="identifying_code"
-													value="<?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 1? html_escape($this->session->flashdata('identifying_code_'.$data['service_provider'])) : '' ?>" <?= $this->session->flashdata('chk_input_agreement_'.$data['service_provider']) == 1? '' : 'disabled' ?>>
-													<?php echo form_error('identifying_code_'.$data['service_provider'], '<span id="error_message_indentify_code_'.$data['service_provider'].'" class="help-block">', '</span>');?>
+													value="<?= $this->session->flashdata('chk_input_service_provider_'.$data['service_provider']) == 1? html_escape($this->session->flashdata('identifying_code_'.$data['service_provider'])) : '' ?>" <?= $this->session->flashdata('chk_input_service_provider_'.$data['service_provider']) == 1? '' : 'disabled' ?>>
+													<?php echo form_error('identifying_code_'.$data['service_provider'], '<span id="error_message_indentifying_code_'.$data['service_provider'].'" class="help-block">', '</span>');?>
 												<?php else: ?>
 													<input type="text" class="form-control" name="identifying_code_<?= $data['service_provider'] ?>"  placeholder="" id="identifying_code" value="<?= $data['contract_status'] == 1? html_escape($data['identifying_code']) : '' ?>"  <?= $data['contract_status'] == 1? '' : 'disabled' ?>>
-													<?php echo form_error('identifying_code_'.$data['service_provider'], '<span id="error_message_indentify_code_'.$data['service_provider'].'" class="help-block">', '</span>');?>
+													<?php echo form_error('identifying_code_'.$data['service_provider'], '<span id="error_message_indentifying_code_'.$data['service_provider'].'" class="help-block">', '</span>');?>
 												<?php endif;?>
 											</div>
 										</div>
@@ -177,7 +170,7 @@
 								</div>
 								<div class="row">
 									<div class="col-lg-12">
-										<a href="<?= site_url('operators') ?>"><i class="fa fa-arrow-circle-left fa-3x fa-fw"></i></a>
+										<a href="<?= site_url('operator') ?>"><i class="fa fa-arrow-circle-left fa-3x fa-fw"></i></a>
 									</div>
 								</div>
 							</form>
@@ -192,68 +185,4 @@
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript">
-			$('#start_date').datetimepicker({
-				timeFormat: 'HH:mm:ss',
-				dateFormat: 'yy/mm/dd'
-			});
-			$('#end_date').datetimepicker({
-				timeFormat: 'HH:mm:ss',
-				dateFormat: 'yy/mm/dd'
-			});
-			var click =$("input[name=count_ip_address]:hidden").val();
-			function addIPAddress() {
-				click++;
-				var dummy = '<div class="form-group" id="group_add_ip_'+click+'">'
-					+ '<label class="control-label col-md-3">No.'+ click +'</label>'
-					+ '<div class="col-md-4">'
-					+ '	<div class="input-group">'
-					+ '		<input type="text" class="form-control" name="ip_address_'+ click +'" value="" >'
-					+ '		<input type="hidden" name="operator_ip_address_' + click + '" value="" />'
-					+ '		<span class="input-group-btn">'
-					+ '			<button class="btn btn-default" id="'+click+'" onclick="removeGroupIP(this.id);" type="button"><i class="fa fa-times" ></i> 削除</button>'
-					+ '		</span>'
-					+ '	</div>'
-					+ '</div>'
-					+ '</div>';
-	    		document.getElementById('ip_address').innerHTML += dummy;
-	    		$("input[name=count_ip_address]").val(click);
-	    		$("input[name=count_ip_address_action]").val(click);
-			};
-
-			function removeGroupIP(id) {
-				var value= $("input[name=ip_address_"+id+"]").val();
-				var list= $("input[name=count_ip_address]").val();
-				var ip_address_id = $("input[name=operator_ip_address_"+ id +"]:hidden").val();
-				$("input[name=delete_operator_ip_address_"+ id +"]:hidden").val(ip_address_id);
-				$("#group_add_ip_"+id).remove();
-			};
-
-			function selectNoAgreement(id) {
-				$("#no_agreement_"+id+'_i').addClass("fa-check-circle-o");
-				$("#no_agreement_"+id+'_i').removeClass("fa-circle-o");
-				$("#no_agreement_"+id).removeClass("btn-outline");
-				$("input[name=chk_input_agreement_"+id+']:hidden').val('0');
-				//
-				$("input[name=identifying_code_"+id+']').attr("disabled", true);
-				$("input[name=identifying_code_"+id+']').val('');
-				//
-				$("#agreement_"+id+'_i').removeClass("fa-check-circle-o");
-				$("#agreement_"+id+'_i').addClass("fa-circle-o");
-				$("#agreement_"+id).addClass("btn-outline");
-				$("#form_group_indentify_code_ud_"+id).removeClass("has-error");
-			};
-			function selectAgreement(id) {
-				$("#agreement_"+id+'_i').addClass("fa-check-circle-o");
-				$("#agreement_"+id+'_i').removeClass("fa-circle-o");
-				$("#agreement_"+id).removeClass("btn-outline");
-				$("input[name=chk_input_agreement_"+id+']:hidden').val('1');
-				//
-				$("input[name=identifying_code_"+id+']').attr("disabled", false);
-				//
-				$("#no_agreement_"+id+'_i').removeClass("fa-check-circle-o");
-				$("#no_agreement_"+id+'_i').addClass("fa-circle-o");
-				$("#no_agreement_"+id).addClass("btn-outline");
-			};
-
-		</script>
+		<script src="<?= site_url('assets/vendor/operatorJs/operatorJs.js'); ?>"></script>

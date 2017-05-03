@@ -1,24 +1,21 @@
-<?php
-use PhpParser\Node\Stmt\Echo_;
-?>
 		<div id="wrapper">
 			<div id="page-wrapper">
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-lg-12">
 							<h1 class="page-header">
-								<a href="<?= site_url('operators') ?>"><i class="fa fa-arrow-circle-left fa-fw"></i></a>
+								<a href="<?= site_url('operator') ?>"><i class="fa fa-arrow-circle-left fa-fw"></i></a>
 								事業者：新規登録
 							</h1>
 						</div>
 					</div>
-					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operators/create') ?>">
+					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operator/create') ?>">
 						<?php if (isset($arr_ip_address_crt)): ?>
-						<input type="hidden" name="count_ip_address_crt" value="<?= count($arr_ip_address_crt); ?>" />
-						<input type="hidden" name="number_ip_address_crt" value="<?= count($arr_ip_address_crt); ?>" />
+						<input type="hidden" name="count_ip_address" value="<?= count($arr_ip_address_crt); ?>" />
+						<input type="hidden" name="number_ip_address" value="<?= count($arr_ip_address_crt); ?>" />
 						<?php else: ?>
-						<input type="hidden" name="count_ip_address_crt" value="" />
-						<input type="hidden" name="number_ip_address_crt" value="" />
+						<input type="hidden" name="count_ip_address" value="" />
+						<input type="hidden" name="number_ip_address" value="" />
 						<?php endif;?>
 						<div class="panel panel-default">
 							<div class="panel-body form-horizontal">
@@ -70,17 +67,17 @@ use PhpParser\Node\Stmt\Echo_;
 										<?php if (isset($arr_ip_address_crt)): ?>
 										<?php foreach($arr_ip_address_crt as $ip_address) : ?>
 										<?php if ($ip_address['message_error_ip_address'] != '') : ?>
-											<div class="form-group has-error" id="group_add_ip_<?= $count_ip_address_crt ++ ?>">
+											<div class="form-group has-error" id="group_add_ip_<?= $count ++ ?>">
 										<?php else: ?>
-											<div class="form-group" id="group_add_ip_<?= $count_ip_address_crt ++ ?>">
+											<div class="form-group" id="group_add_ip_<?= $count ++ ?>">
 										<?php endif;?>
-											<label class="control-label col-md-3">No.<?= $count_ip_address_crt - 1 ?></label>
+											<label class="control-label col-md-3">No.<?= $count - 1 ?></label>
 											<div class="col-md-4">
 												<div class="input-group">
-													<input type="text" class="form-control" name="ip_address_<?= $count_ip_address_crt - 1 ?>" value="<?= $ip_address['ip_address'] ?>">
-													<input type="hidden" name="operator_ip_address_<?= $count_ip_address_crt - 1 ?>" value="<?= $ip_address['ip_address'] ?>" />
+													<input type="text" class="form-control" name="ip_address_<?= $count - 1 ?>" value="<?= $ip_address['ip_address'] ?>">
+													<input type="hidden" name="operator_ip_address_<?= $count - 1 ?>" value="<?= $ip_address['ip_address'] ?>" />
 													<span class="input-group-btn">
-														<button class="btn btn-default" id="<?= $count_ip_address_crt - 1 ?>" onclick="removeGroupIP(this.id);" type="button"><i class="fa fa-times" ></i> 削除</button>'
+														<button class="btn btn-default" id="<?= $count - 1 ?>" onclick="removeGroupIP(this.id);" type="button"><i class="fa fa-times" ></i> 削除</button>'
 													</span>
 												</div>
 												<?php if ($ip_address['message_error_ip_address'] != '') : ?>
@@ -103,22 +100,22 @@ use PhpParser\Node\Stmt\Echo_;
 										<div class="form-group">
 											<label class="control-label col-md-3"><span class="text-danger">※</span>契約状況</label>
 											<div class="col-md-9 btn-group" id="contract_status_<?= $data['id'] ?>">
-												<button type="button" id="no_agreement_<?= $data['id'] ?>" class="btn btn-primary <?= set_value('chk_input_agreement_'.$data['id']) == 1 ? 'btn-outline' : '' ?>" name="no_agreement" onclick="selectAgreement(<?= $data['id'] ?>, this.name);">
-												<i class="fa <?= set_value('chk_input_agreement_'.$data['id']) == 0 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="no_agreement_<?= $data['id'] ?>_i"></i> 未契約</button>
-												<button type="button" id="agreement_<?= $data['id'] ?>"  class="btn btn-primary <?= set_value('chk_input_agreement_'.$data['id']) == 0 ? 'btn-outline' : '' ?>" name="agreement" onclick="selectAgreement(<?= $data['id'] ?>, this.name);">
-												<i class="fa <?= set_value('chk_input_agreement_'.$data['id']) == 1 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="agreement_<?= $data['id'] ?>_i"></i> 契約中</button>
-												<input type="hidden"  name="chk_input_agreement_<?= $data['id'] ?>" value="<?php echo set_value('chk_input_agreement_'.$data['id'],''); ?>" />
+												<button type="button" id="no_service_provider_<?= $data['id'] ?>" class="btn btn-primary <?= set_value('chk_input_service_provider_'.$data['id']) == 1 ? 'btn-outline' : '' ?>" name="no_service_provider" onclick="selectServiceprovider(<?= $data['id'] ?>, this.name);">
+												<i class="fa <?= set_value('chk_input_service_provider_'.$data['id']) == 0 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="no_service_provider_<?= $data['id'] ?>_i"></i> 未契約</button>
+												<button type="button" id="service_provider_<?= $data['id'] ?>"  class="btn btn-primary <?= set_value('chk_input_service_provider_'.$data['id']) == 0 ? 'btn-outline' : '' ?>" name="ye_service_provider" onclick="selectServiceprovider(<?= $data['id'] ?>, this.name);">
+												<i class="fa <?= set_value('chk_input_service_provider_'.$data['id']) == 1 ? 'fa-check-circle-o' : 'fa-circle-o' ?> fa-fw" id="service_provider_<?= $data['id'] ?>_i"></i> 契約中</button>
+												<input type="hidden"  name="chk_input_service_provider_<?= $data['id'] ?>" value="<?php echo set_value('chk_input_service_provider_'.$data['id'],''); ?>" />
 											</div>
 										</div>
-										<?php if(form_error('indentify_code_'.$data['id']) != '') : ?>
-										<div id="form_group_indentify_code_<?= $data['id'] ?>" class="form-group has-error">
+										<?php if(form_error('identifying_code_'.$data['id']) != '') : ?>
+										<div id="form_group_indentifying_code_<?= $data['id'] ?>" class="form-group has-error">
 										<?php else: ?>
 										<div class="form-group">
 										<?php endif;?>
 											<label class="control-label col-md-3">識別コード</label>
 											<div class="col-md-6">
-												<input type="text" class="form-control" name="indentify_code_<?= $data['id'] ?>"  placeholder="" id="indentify_code" <?= set_value('chk_input_agreement_'.$data['id']) == 0 ? 'disabled' : '' ?> value="<?php echo set_value('indentify_code_'.$data['id'],''); ?>">
-												<?php echo form_error('indentify_code_'.$data['id'], '<span id="error_message_indentify_code_'.$data['id'].'" class="help-block">', '</span>');?>
+												<input type="text" class="form-control" name="identifying_code_<?= $data['id'] ?>"  placeholder="" id="indentify_code" <?= set_value('chk_input_service_provider_'.$data['id']) == 0 ? 'disabled' : '' ?> value="<?php echo set_value('identifying_code_'.$data['id'],''); ?>">
+												<?php echo form_error('identifying_code_'.$data['id'], '<span id="error_message_indentifying_code_'.$data['id'].'" class="help-block">', '</span>');?>
 											</div>
 										</div>
 									</div>
@@ -136,7 +133,7 @@ use PhpParser\Node\Stmt\Echo_;
 								</div>
 								<div class="row">
 									<div class="col-lg-12">
-										<a href="<?= site_url('operators') ?>"><i class="fa fa-arrow-circle-left fa-3x fa-fw"></i></a>
+										<a href="<?= site_url('operator') ?>"><i class="fa fa-arrow-circle-left fa-3x fa-fw"></i></a>
 									</div>
 								</div>
 							</form>
@@ -152,83 +149,4 @@ use PhpParser\Node\Stmt\Echo_;
 			</div>
 		</div>
 
-		<script type="text/javascript">
-			$('#start_date').datetimepicker({
-				timeFormat: 'HH:mm:ss',
-				dateFormat: 'yy/mm/dd'
-			});
-			$('#end_date').datetimepicker({
-				timeFormat: 'HH:mm:ss',
-				dateFormat: 'yy/mm/dd'
-			});
-			var click =$("input[name=count_ip_address_crt]:hidden").val();
-			function addIPAddress() {
-				var number_ip_address_crt = $("input[name=number_ip_address_crt]:hidden").val();
-				if(number_ip_address_crt < 100){
-					click++;
-					number_ip_address_crt ++;
-					var dummy = '<div class="form-group" id="group_add_ip_'+click+'">'
-						+ '<label class="control-label col-md-3" id="label_'+ click +'">No.'+ click +'</label>'
-						+ '<div class="col-md-4">'
-						+ '	<div class="input-group">'
-						+ '		<input type="text" class="form-control" name="ip_address_'+ click +'" value="" >'
-						+ '		<span class="input-group-btn">'
-						+ '			<button class="btn btn-default" id="'+click+'" onclick="removeGroupIP(this.id);" type="button"><i class="fa fa-times" ></i> 削除</button>'
-						+ '		</span>'
-						+ '	</div>'
-						+ '</div>'
-						+ '</div>';
-		    		document.getElementById('ip_address').innerHTML += dummy;
-		    		$("input[name=count_ip_address_crt]").val(click);
-		    		if(number_ip_address_crt > 0 && number_ip_address_crt < click)
-		    		{
-		    			$("input[name=number_ip_address_crt]:hidden").val(number_ip_address_crt);
-			    	}
-		    		else
-		    		{
-		    			$("input[name=number_ip_address_crt]:hidden").val(click);
-			    	}
-				}
-			};
-
-			function removeGroupIP(id) {
-				$("#group_add_ip_"+id).remove();
-				var value= $("input[name=ip_address_"+id+"]").val();
-				var list= $("input[name=count_ip_address_crt]").val();
-				var number_ip_address_crt = $("input[name=number_ip_address_crt]:hidden").val();
-				 $("input[name=number_ip_address_crt]:hidden").val(parseInt(number_ip_address_crt) - 1);
-			};
-
-			function selectAgreement(id, name) {
-				if (name == 'no_agreement')
-				{
-					$("#no_agreement_"+id+'_i').addClass("fa-check-circle-o");
-					$("#no_agreement_"+id+'_i').removeClass("fa-circle-o");
-					$("#no_agreement_"+id).removeClass("btn-outline");
-					$("input[name=chk_input_agreement_"+id+']:hidden').val('0');
-					//
-					$("input[name=indentify_code_"+id+']').attr("disabled", true);
-					$("input[name=indentify_code_"+id+']').val('');
-					//
-					$("#agreement_"+id+'_i').removeClass("fa-check-circle-o");
-					$("#agreement_"+id+'_i').addClass("fa-circle-o");
-					$("#agreement_"+id).addClass("btn-outline");
-					$("#form_group_indentify_code_"+id).removeClass("has-error");
-					$( "#error_message_indentify_code_"+id ).remove();
-				}
-				else
-				{
-					$("#agreement_"+id+'_i').addClass("fa-check-circle-o");
-					$("#agreement_"+id+'_i').removeClass("fa-circle-o");
-					$("#agreement_"+id).removeClass("btn-outline");
-					$("input[name=chk_input_agreement_"+id+']:hidden').val('1');
-					//
-					$("input[name=indentify_code_"+id+']').attr("disabled", false);
-					//
-					$("#no_agreement_"+id+'_i').removeClass("fa-check-circle-o");
-					$("#no_agreement_"+id+'_i').addClass("fa-circle-o");
-					$("#no_agreement_"+id).addClass("btn-outline");
-				}
-			};
-
-		</script>
+		<script src="<?= site_url('assets/vendor/operatorJs/operatorJs.js'); ?>"></script>

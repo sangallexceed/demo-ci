@@ -11,7 +11,7 @@
 						<div class="row">
 							<?php
 					        $attr = array("class" => "form-horizontal", "role" => "form", "id" => "search_operator_form", "name" => "search_operator_form");
-					        echo form_open("operators/search", $attr);?>
+					        echo form_open("operator/search", $attr);?>
 					        <input type="hidden" name="search_name_hidden" value="<?= set_value('search_name', '')?>" />
 					        <input type="hidden" name="service_provider_hidden" value="<?php echo set_value('service_provider', ''); ?>" />
 					        <input type="hidden" name="column_name_hidden" value="" />

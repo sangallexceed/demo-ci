@@ -43,7 +43,7 @@
 												<a href="#" onclick="return arrangementData('end_date','ASC','no_service_provider');"><i class="fa fa-arrow-up"></i></a>
 												<a href="#" onclick="return arrangementData('end_date','DESC','no_service_provider');"><i class="fa fa-arrow-down"></i></a>
 											</th>
-											<th class="col-md-1"><a href="<?php echo site_url('operators/create') ?>" class="btn btn-success btn-block btn-sm"><i class="fa fa-plus fa-fw"></i> 新規登録</a></th>
+											<th class="col-md-1"><a href="<?php echo site_url('operator/create') ?>" class="btn btn-success btn-block btn-sm"><i class="fa fa-plus fa-fw"></i> 新規登録</a></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -61,7 +61,7 @@
 											<?php endforeach;?>
 											<td><?php if(isset($data['start_date']) && ($data['start_date'] != '0000-00-00')){ echo date("Y/m/d", strtotime($data['start_date']));}?></td>
 											<td><?php if(isset($data['end_date']) && ($data['end_date'] != '0000-00-00')){ echo date("Y/m/d", strtotime($data['end_date']));}?></td>
-											<th><a href="<?= site_url('operators/update') ?>/<?= $data['operator_id'] ?>" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
+											<th><a href="<?= site_url('operator/update') ?>/<?= $data['operator_id'] ?>" class="btn btn-primary btn-outline btn-block btn-sm"><i class="fa fa-pencil-square-o fa-fw"></i> 編集</a></th>
 										</tr>
 										<?php endforeach; ?>
 										<?php endif; ?>

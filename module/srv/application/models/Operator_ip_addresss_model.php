@@ -53,41 +53,13 @@ class Operator_ip_addresss_model extends CI_Model
 	}
 
 	/**
-	 * 掲示板の承認ステータスを更新する。
-	 *
-	 * @param
-	 *        	$id
-	 * @param
-	 *        	$operator_id
-	 * @param
-	 *        	$ip_address
-	 */
-	public function update_data($id, $operator_id, $ip_address)
-	{
-		$data = [
-				'ip_address' => $ip_address
-		];
-		$this->db->where('operator_ip_address_id', $id);
-		$this->db->where('operator_id', $operator_id);
-		$this->db->update($this->table_name, $data);
-	}
-
-	/**
 	 * IPアドレスを削除する
 	 *
-	 * @param
-	 *        	$id
-	 * @param
-	 *        	$operator_id
+	 * @param $id
 	 */
-	public function delete_row($operator_id, $id)
+	public function delete_row($id)
 	{
-		$data = [
-				'deleted_at' => date('Y-m-d H:i:s')
-		];
 		$this->db->where('operator_ip_address_id', $id);
-		$this->db->where('operator_id', $operator_id);
-		$this->db->update($this->table_name, $data);
-		log_message('debug', "----------SQL :" . $this->db->last_query());
+		$this->db->delete($this->table_name);
 	}
 }

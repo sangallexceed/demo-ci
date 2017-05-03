@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<h3 class="panel-title">MVNOモジュール共通API</h3>
 						</div>
 						<div class="panel-body">
-							<form role="form" method="post" action="/manage/login/validation">
+							<form role="form" method="post" action="<?= site_url('login') ?>">
 								<fieldset>
 									<?php if ($this->session->has_userdata('error_message')): ?>
 										<div class="alert alert-dismissible alert-danger">
@@ -40,12 +40,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										</div>
 									<?php endif; ?>
 									<div class="form-group">
-										<input class="form-control" placeholder="ログインID" name="username" type="text" value="<?= isset($username) ? $username : '' ?>" required autofocus>
+										<input class="form-control" placeholder="ログインID" name="username" type="text" value="<?= set_value('username',''); ?>" required autofocus>
 									</div>
 									<div class="form-group">
-										<input class="form-control" placeholder="パスワード" name="password" type="password" value="">
+										<input class="form-control" placeholder="パスワード" name="password" type="password" value="" required>
 									</div>
-									<button class="btn btn-lg btn-primary btn-block" type="submit">ログインする</button>
+									<button class="btn btn-lg btn-success btn-block" type="submit"><i class="fa fa-sign-in fa-fw"></i>ログイン</button>
 								</fieldset>
 							</form>
 						</div>

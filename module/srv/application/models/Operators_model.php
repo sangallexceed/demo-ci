@@ -178,19 +178,22 @@ class Operators_model extends CI_Model
 				'updated_at' => date('Y-m-d H:i:s'),
 				'operator_name' => $post['business_name']
 		];
-
-		if (isset($post['start_date']))
+		$start_date = $post['start_date'];
+		$end_date = $post['end_date'];
+		if(!$start_date)
 		{
-			$param_operator = array_merge($param_operator, [
-					"start_date" => $post['start_date']
-			]);
+			$start_date = null;
 		}
-		if (isset($post['end_date']))
+		$param_operator = array_merge($param_operator, [
+				"start_date" => $start_date
+		]);
+		if(!$end_date)
 		{
-			$param_operator = array_merge($param_operator, [
-					"end_date" => $post['end_date']
-			]);
+			$end_date = null;
 		}
+		$param_operator = array_merge($param_operator, [
+				"end_date" => $end_date
+		]);
 		$this->db->where('operator_id', $id);
 		$this->db->update($this->table_name, $param_operator);
 	}
@@ -244,8 +247,10 @@ class Operators_model extends CI_Model
 				foreach ($operator_names as $operator_name)
 				{
 					$operator_name = trim($operator_name);
-					//$this->db->like();
-					$this->db->or_like('OP.operator_name', $operator_name);
+					if($operator_name)
+					{
+						$this->db->or_like('OP.operator_name', $operator_name);
+					}
 				}
 				$this->db->group_end();
 			}
@@ -267,7 +272,6 @@ class Operators_model extends CI_Model
 						if(isset($collumn) && !empty($collumn))
 						{
 							$this->db->order_by("OP.".$collumn, $param_search['sort_type']);
-							log_message('debug', '================-===debug====================');
 						}
 					}
 				}
@@ -283,7 +287,7 @@ class Operators_model extends CI_Model
 			$this->db->limit($params['limit']);
 		}
 		$query = $this->db->get();
-		log_message('debug', '================SQL1: ' . $this->db->last_query());
+		log_message('debug', "----------SQL :" . $this->db->last_query());
 		return $query->result_array();
 	}
 

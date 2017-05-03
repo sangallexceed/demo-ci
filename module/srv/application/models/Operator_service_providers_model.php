@@ -43,23 +43,15 @@ class Operator_service_providers_model extends CI_Model
 	}
 
 	/**
-	 * 掲示板の承認ステータスを更新する。
+	 * 削除する
 	 *
-	 * @param
-	 *        	$id
-	 * @param
-	 *        	$post
+	 * @param $id
 	 */
-	public function update_data($id, $service_provider_id, $input_agreement, $indentify_code)
+	public function delete_row($id, $operator_id)
 	{
-		$data = [
-				'updated_at' => date('Y-m-d H:i:s'),
-				'contract_status' => $input_agreement,
-				'identifying_code' => $indentify_code
-		];
-		$this->db->where('operator_id', $id);
-		$this->db->where('service_provider', $service_provider_id);
-		$this->db->update($this->table_name, $data);
+		$this->db->where('operator_service_provider_id', $id);
+		$this->db->where('operator_id', $operator_id);
+		$this->db->delete($this->table_name);
 	}
 
 }
