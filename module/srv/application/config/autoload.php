@@ -133,7 +133,6 @@ $autoload['language'] = array();
 |	$autoload['model'] = array('first_model' => 'first');
 */
 $autoload['model'] = array(
-		'login_model',
 		'operators_model',
 		'operator_service_providers_model',
 		'operator_ip_addresss_model'

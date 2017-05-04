@@ -281,7 +281,6 @@ class Operators_model extends CI_Model
 			$this->db->limit($params['limit']);
 		}
 		$query = $this->db->get();
-		log_message('debug', "----------SQL :" . $this->db->last_query());
 		return $query->result_array();
 	}
 

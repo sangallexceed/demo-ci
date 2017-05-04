@@ -71,6 +71,10 @@ class Login extends CI_Controller {
 					if($user_name === $key && hash ( "sha256", $pass_word ) === $value)
 					{
 						$this->session->set_userdata('logged_in', $user_name);
+						log_message('error', "ログイン可否：login success");
+						log_message('error', "ログインID： ". $user_name);
+						log_message('error', "IPアドレス： ". $ip_address);
+
 						redirect('operator');
 						return;
 					}
@@ -82,6 +86,9 @@ class Login extends CI_Controller {
 				if($message != "")
 				{
 					$this->session->set_flashdata('error_message', $message);
+					log_message('error', "ログイン可否： login failure");
+					log_message('error', "ログインID： ". $user_name);
+					log_message('error', "IPアドレス： ". $ip_address);
 					$this->render_login();
 					return;
 				}
