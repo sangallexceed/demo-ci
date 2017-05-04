@@ -40,7 +40,7 @@
 										<div class="form-group">
 											<label class="control-label col-md-3">利用開始日</label>
 											<div class="col-md-4">
-											<?php if (isset($start_date0)): ?>
+											<?php if (isset($start_date)): ?>
 												<input type="text" class="form-control" name="start_date" id="start_date" placeholder="" value="<?= html_escape($start_date); ?>" >
 											<?php else: ?>
 												<input type="text" class="form-control" name="start_date" id="start_date"  placeholder="" value="<?php if(isset($operator->start_date) && $operator->start_date != '0000-00-00'){ echo date("Y/m/d", strtotime($operator->start_date));}?>">

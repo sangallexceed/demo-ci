@@ -44,7 +44,7 @@
 												<?php echo form_error('start_date', '<div class="help-block">', '</div>');?>
 											</div>
 										</div>
-										<?php if(form_error('end_date') != '') : ?>
+										<?php if(form_error('end_date') != ''  || $error_date != '') : ?>
 										<div class="form-group has-error">
 										<?php else: ?>
 										<div class="form-group">
@@ -53,6 +53,9 @@
 											<div class="col-md-4">
 												<input class="form-control" id="end_date" name="end_date" placeholder="" value="<?php echo set_value('end_date', ''); ?>" >
 												<?php echo form_error('end_date', '<div class="help-block">', '</div>');?>
+												<?php if($error_date != '') : ?>
+												<div class="help-block"><?= $error_date  ?></div>
+												<?php endif; ?>
 											</div>
 										</div>
 									</div>

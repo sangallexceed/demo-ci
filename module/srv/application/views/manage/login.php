@@ -9,17 +9,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<title>MVNOモジュール共通API</title>
-		<link rel="stylesheet" href="/manage/assets/vendor/bootstrap/css/bootstrap.min.css">
-		<link rel="stylesheet" href="/manage/assets/vendor/metisMenu/metisMenu.min.css">
-		<link rel="stylesheet" href="/manage/assets/vendor/datatables-plugins/dataTables.bootstrap.css">
-	    <link rel="stylesheet" href="/manage/assets/vendor/datatables-responsive/dataTables.responsive.css">
-		<link rel="stylesheet" href="/manage/assets/vendor/sb-admin-2/css/sb-admin-2.css">
-		<link rel="stylesheet" href="/manage/assets/vendor/font-awesome/css/font-awesome.min.css">
-		<link rel="stylesheet" href="/manage/assets/css/app.css">
-		<!--[if lt IE 9]>
-			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-		<![endif]-->
+		<link rel="stylesheet" href="<?= site_url('assets/vendor/bootstrap/css/bootstrap.min.css'); ?>">
+		<link rel="stylesheet" href="<?= site_url('assets/vendor/metisMenu/metisMenu.min.css'); ?>">
+		<link rel="stylesheet" href="<?= site_url('assets/vendor/datatables-plugins/dataTables.bootstrap.css'); ?>">
+		<link rel="stylesheet" href="<?= site_url('assets/vendor/datatables-responsive/dataTables.responsive.css'); ?>">
+		<link rel="stylesheet" href="<?= site_url('assets/vendor/sb-admin-2/css/sb-admin-2.css'); ?>">
+		<link rel="stylesheet" href="<?= site_url('assets/vendor/font-awesome/css/font-awesome.min.css'); ?>">
+		<link rel="stylesheet" href="<?= site_url('assets/css/app.css'); ?>">
 	</head>
 	<body>
 		<div class="container">
@@ -53,10 +49,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 			</div>
 		</div>
-		<script src="/manage/assets/vendor/jquery/jquery.min.js"></script>
-		<script src="/manage/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-		<script src="/manage/assets/vendor/metisMenu/metisMenu.min.js"></script>
-		<script src="/manage/assets/vendor/sb-admin-2/js/sb-admin-2.js"></script>
-		<script src="/manage/assets/js/app.js"></script>
+		<script src="<?= site_url('assets/vendor/jquery/jquery.min.js'); ?>"></script>
+		<script src="<?= site_url('assets/vendor/bootstrap/js/bootstrap.min.js'); ?>"></script>
+		<script src="<?= site_url('assets/vendor/metisMenu/metisMenu.min.js'); ?>"></script>
+		<script src="<?= site_url('assets/vendor/sb-admin-2/js/sb-admin-2.js'); ?>"></script>
+		<script src="<?= site_url('assets/js/app.js'); ?>"></script>
 	</body>
 </html>

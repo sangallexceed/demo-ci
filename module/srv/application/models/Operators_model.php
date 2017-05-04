@@ -15,8 +15,7 @@ class Operators_model extends CI_Model
 	/**
 	 * idで取得する
 	 *
-	 * @param
-	 *        	$id
+	 * @param $id
 	 */
 	public function get_by_id($id)
 	{
@@ -30,18 +29,18 @@ class Operators_model extends CI_Model
 	/**
 	 * データを登録する
 	 *
-	 * @param
-	 *        	$data
+	 * @param $data
 	 */
 	public function insert_data($data)
 	{
 		$this->db->insert($this->table_name, $data);
+		$insert_id = $this->db->insert_id();
+		return $insert_id;
 	}
 
 	/**
 	 *
-	 * @param
-	 *        	$ip_address
+	 * @param $ip_address
 	 */
 	public function search($ip_address)
 	{
@@ -117,10 +116,8 @@ class Operators_model extends CI_Model
 
 	/**
 	 *
-	 * @param
-	 *        	$limit
-	 * @param
-	 *        	$id
+	 * @param $limit
+	 * @param $id
 	 */
 	public function fetch_data($limit, $start)
 	{
@@ -153,8 +150,7 @@ class Operators_model extends CI_Model
 	/**
 	 * idで取得する
 	 *
-	 * @param
-	 *        	$id
+	 * @param $id
 	 */
 	public function get_id($operater_name)
 	{
@@ -167,10 +163,8 @@ class Operators_model extends CI_Model
 	/**
 	 * 掲示板の承認ステータスを更新する。
 	 *
-	 * @param
-	 *        	$id
-	 * @param
-	 *        	$post
+	 * @param $id
+	 * @param $post
 	 */
 	public function update_data($id, $post)
 	{

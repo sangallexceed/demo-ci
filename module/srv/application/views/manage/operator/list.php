@@ -40,7 +40,7 @@
 								</div>
 							</div>
 							<div class="col-lg-12 text-center">
-								<button id="btn_clear" name="btn_clear" type="reset" class="btn btn-default" onclick="clearFrom();"><i class="fa fa-eraser fa-fw"></i>クリア</button>
+								<button id="btn_clear" name="btn_clear" type="submit" class="btn btn-default"><i class="fa fa-eraser fa-fw"></i>クリア</button>
 								<button id="btn_search" name="btn_search" type="submit" class="btn btn-primary"><i class="fa fa-search fa-fw"></i>絞り込む</button>
 							</div>
 							<?php echo form_close(); ?>
@@ -114,16 +114,6 @@
 					}
 				});
 			};
-			function clearFrom() {
-				$('#search_name').removeAttr('value');
-				$("input[name=service_provider]:hidden").val('');
-				var service_providers = <?php echo json_encode($condition_service_providers); ?>;
-				service_providers.forEach(function(service_provider) {
-					$("#service_provider_"+service_provider).addClass("btn-outline");
-			    	$("#service_provider_i_"+service_provider).removeClass("fa-check-circle-o");
-			    	$("#service_provider_i_"+service_provider).addClass("fa-circle-o");
-				});
-			};
 
 			function arrangementData (column, sort, sort_service_provider) {
 				$('input[name=column_name_hidden]').val(column);
@@ -133,7 +123,7 @@
 		        var service_provider = $('input[name=service_provider_hidden]').val();
 				$.ajax({
 					method: "POST",
-					url: "<?php echo base_url(); ?>operators/arrangementData",
+					url: "<?php echo base_url(); ?>operator/arrangementData",
 					data: {
 						column: column,
 						sort: sort,

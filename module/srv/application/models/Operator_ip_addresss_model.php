@@ -14,8 +14,7 @@ class Operator_ip_addresss_model extends CI_Model
 	/**
 	 * ip_addressで取得する
 	 *
-	 * @param
-	 *        	$ip_address
+	 * @param $ip_address
 	 */
 	public function get_ip_address($ip_address)
 	{
@@ -29,8 +28,7 @@ class Operator_ip_addresss_model extends CI_Model
 	/**
 	 * ipで取得する
 	 *
-	 * @param
-	 *        	$id
+	 * @param $id
 	 */
 	public function get_by_id($id)
 	{
@@ -44,8 +42,7 @@ class Operator_ip_addresss_model extends CI_Model
 	/**
 	 * データを登録する
 	 *
-	 * @param
-	 *        	$data
+	 * @param $data
 	 */
 	public function insert_data($data)
 	{

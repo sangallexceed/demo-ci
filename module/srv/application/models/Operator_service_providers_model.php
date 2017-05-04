@@ -19,8 +19,7 @@ class Operator_service_providers_model extends CI_Model
 	/**
 	 * idで取得する
 	 *
-	 * @param
-	 *        	$id
+	 * @param $id
 	 */
 	public function get_by_id($id)
 	{
@@ -34,8 +33,7 @@ class Operator_service_providers_model extends CI_Model
 	/**
 	 * データを登録する
 	 *
-	 * @param
-	 *        	$data
+	 * @param $data
 	 */
 	public function insert_data($data)
 	{
