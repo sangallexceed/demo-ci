@@ -55,4 +55,5 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['manage/operator'] = 'manage/Operator';
 $route['manage/login']= 'manage/Login';
+$route['manage/logout']= 'manage/Login/logout';
 

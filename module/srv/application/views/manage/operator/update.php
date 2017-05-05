@@ -23,7 +23,7 @@
 								<div class="row">
 									<div class="col-lg-6">
 										<legend>事業者情報</legend>
-										<?php if($this->session->has_userdata('error_business_name_upd') && set_value('business_name') === '') : ?>
+										<?php if(form_error('business_name') != '') : ?>
 										<div class="form-group has-error">
 										<?php else: ?>
 										<div class="form-group">
@@ -35,9 +35,14 @@
 											<?php else: ?>
 												<input type="text" class="form-control" name="business_name"  placeholder="" value="<?= html_escape($operator->operator_name); ?>">
 											<?php endif;?>
+											<?php echo form_error('business_name', '<div class="help-block">', '</div>');?>
 											</div>
 										</div>
+										<?php if(form_error('start_date') != '') : ?>
+										<div class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3">利用開始日</label>
 											<div class="col-md-4">
 											<?php if (isset($start_date)): ?>
@@ -45,9 +50,14 @@
 											<?php else: ?>
 												<input type="text" class="form-control" name="start_date" id="start_date"  placeholder="" value="<?php if(isset($operator->start_date) && $operator->start_date != '0000-00-00'){ echo date("Y/m/d", strtotime($operator->start_date));}?>">
 											<?php endif;?>
+											<?php echo form_error('start_date', '<div class="help-block">', '</div>');?>
 											</div>
 										</div>
+										<?php if(form_error('end_date') != ''  || $error_date != '') : ?>
+										<div class="form-group has-error">
+										<?php else: ?>
 										<div class="form-group">
+										<?php endif;?>
 											<label class="control-label col-md-3">利用終了日</label>
 											<div class="col-md-4">
 												<?php if (isset($end_date)): ?>
@@ -55,6 +65,10 @@
 												<?php else: ?>
 													<input type="text" class="form-control" name="end_date" id="end_date"  placeholder="" value="<?php if(isset($operator->end_date) && ($operator->end_date != '0000-00-00')){ echo date("Y/m/d", strtotime($operator->end_date));}?>">
 												<?php endif;?>
+												<?php echo form_error('end_date', '<div class="help-block">', '</div>');?>
+												<?php if($error_date != '') : ?>
+												<div class="help-block"><?= $error_date  ?></div>
+												<?php endif; ?>
 											</div>
 										</div>
 									</div>

@@ -228,7 +228,7 @@ class Operators_model extends CI_Model
 		if(array_key_exists("param_search", $params))
 		{
 			$param_search = $params['param_search'];
-			$search_name = $param_search['search_name'];
+			$search_name = trim($param_search['search_name']);
 			$service_provider = $param_search['service_provider'];
 			if (isset($service_provider) && !empty($service_provider))
 			{
@@ -236,12 +236,12 @@ class Operators_model extends CI_Model
 			}
 			if (isset($search_name) && !empty($search_name))
 			{
-				$operator_names = explode(' ', $search_name);
+				$operator_names = explode(" ", $search_name);
 				$this->db->group_start();
 				foreach ($operator_names as $operator_name)
 				{
 					$operator_name = trim($operator_name);
-					if($operator_name)
+					if($operator_name !== '')
 					{
 						$this->db->or_like('OP.operator_name', $operator_name);
 					}

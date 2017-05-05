@@ -3,8 +3,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login extends CI_Controller {
-	protected $data = array('username' => null);
-
 
 	public function __construct()
 	{

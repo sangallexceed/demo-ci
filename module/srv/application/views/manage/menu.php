@@ -6,7 +6,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="list.html">MVNOモジュール共通API</a>
+					<a class="navbar-brand" href="<?php echo site_url('operator') ?>">MVNOモジュール共通API</a>
 				</div>
 
 				<ul class="nav navbar-top-links navbar-right">

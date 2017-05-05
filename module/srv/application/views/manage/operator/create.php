@@ -10,9 +10,9 @@
 						</div>
 					</div>
 					<form class="form-horizontal" method="post" role="form" action="<?= site_url('operator/create') ?>">
-						<?php if (isset($arr_ip_address_crt)): ?>
-						<input type="hidden" name="count_ip_address" value="<?= count($arr_ip_address_crt); ?>" />
-						<input type="hidden" name="number_ip_address" value="<?= count($arr_ip_address_crt); ?>" />
+						<?php if (isset($arr_ip_address)): ?>
+						<input type="hidden" name="count_ip_address" value="<?= count($arr_ip_address); ?>" />
+						<input type="hidden" name="number_ip_address" value="<?= count($arr_ip_address); ?>" />
 						<?php else: ?>
 						<input type="hidden" name="count_ip_address" value="" />
 						<input type="hidden" name="number_ip_address" value="" />
@@ -67,8 +67,8 @@
 												<button type="button" class="btn btn-primary" name="add_ip_address" onclick="addIPAddress();"><i class="fa fa-plus fa-fw"></i> 追加</button>
 											</div>
 										</div>
-										<?php if (isset($arr_ip_address_crt)): ?>
-										<?php foreach($arr_ip_address_crt as $ip_address) : ?>
+										<?php if (isset($arr_ip_address)): ?>
+										<?php foreach($arr_ip_address as $ip_address) : ?>
 										<?php if ($ip_address['message_error_ip_address'] != '') : ?>
 											<div class="form-group has-error" id="group_add_ip_<?= $count ++ ?>">
 										<?php else: ?>
